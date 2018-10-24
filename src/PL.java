@@ -4,20 +4,15 @@ public class PL {
 
 	private boolean maximiser;
 	private int nbVariables;
-	private int[][] foncObj;
+	protected int[][] foncObj;
 	private ArrayList<Equation> contraintes;
 	private ArrayList<Solution> solutions;
-	private int dimension;
+	protected int dimension;
 	
-	public PL(int dimension){
-		foncObj = new int[dimension][dimension];
-		this.dimension = dimension;
+	public PL(){
+		
 	}
 
-	private int calculDistance(int x1, int y1, int x2, int y2){
-		return (int)Math.sqrt(Math.abs(x1-x2)*Math.abs(x1-x2) + Math.abs(y1-y2)*Math.abs(y1-y2));
-	}
-	
 	public int getNbVariables(){
 		return nbVariables;
 	}
@@ -28,13 +23,6 @@ public class PL {
 
 	public int[][] getFoncObj() {
 		return foncObj;
-	}
-	
-	public void setFoncObj(int[][] pos){
-		for(int i = 0; i < dimension; i++){
-			for(int j = 0; j < dimension; j++)
-				foncObj[i][j] = calculDistance(pos[i][0], pos[i][1], pos[j][0], pos[j][1]);
-		}
 	}
 
 	public ArrayList<Equation> getContraintes() {

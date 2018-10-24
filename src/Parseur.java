@@ -10,7 +10,7 @@ public class Parseur {
 		
 	}
 
-	private PL parserTSP(FileReader f){
+	private int[][] parserTSP(FileReader f){
 		PL probleme;
 		String line;
 		BufferedReader br = new BufferedReader(f);
@@ -23,7 +23,7 @@ public class Parseur {
 			
 			// Dimension du problème
 			dim = Integer.parseInt(br.readLine().substring(11));
-			probleme = new PL(dim);
+			//probleme = new PL(dim);
 			pos = new int[dim][2];
 			
 			// Saut de lignes
@@ -39,20 +39,20 @@ public class Parseur {
 				pos[i][1] = Integer.parseInt(removeBlanks(line).split("\\s+")[2]);
 				i++;
 			}
-			probleme.setFoncObj(pos);
+			//probleme.setFoncObj(pos);
 
-			return probleme;
+			return pos;
 		} catch(IOException e){
 			
 		};
-		return new PL(0);
+		return new int[0][0];
 	}
 	
-	private PL parserXML(FileReader f){
-		return new PL(0);
+	private int[][] parserXML(FileReader f){
+		return new int[0][0];
 	}
 	
-	public PL parserFichier(File f){
+	public int[][] parserFichier(File f){
 		String ext = f.getName().split("\\.")[1];
 		switch(ext){
 			case "tsp":
@@ -72,7 +72,7 @@ public class Parseur {
 			default:
 				System.err.println("Ce type de fichier n'est pas reconnu par l'application.");
 		}
-		return new PL(0);
+		return new int[0][0];
 	}
 	
 	private String removeBlanks(String str){
