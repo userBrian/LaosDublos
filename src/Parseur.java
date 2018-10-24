@@ -11,7 +11,6 @@ public class Parseur {
 	}
 
 	private int[][] parserTSP(FileReader f){
-		PL probleme;
 		String line;
 		BufferedReader br = new BufferedReader(f);
 		int pos[][], dim, i = 0;
@@ -23,7 +22,6 @@ public class Parseur {
 			
 			// Dimension du problème
 			dim = Integer.parseInt(br.readLine().substring(11));
-			//probleme = new PL(dim);
 			pos = new int[dim][2];
 			
 			// Saut de lignes
@@ -39,7 +37,6 @@ public class Parseur {
 				pos[i][1] = Integer.parseInt(removeBlanks(line).split("\\s+")[2]);
 				i++;
 			}
-			//probleme.setFoncObj(pos);
 
 			return pos;
 		} catch(IOException e){

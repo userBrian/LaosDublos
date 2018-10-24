@@ -3,12 +3,22 @@ public abstract class Recuit {
 
 	private int nbIterations;
     private double meilleurCout;
-    private double temperature;
+    protected double temperature;
+    protected PL probleme;
 	
-	public Recuit() {
-		// TODO Auto-generated constructor stub
+	public Recuit(PL prob) {
+		probleme = prob;
+		temperature = 10000;
+	}
+	
+	protected void initialiserTemp(){
+		
 	}
 	
 	protected abstract void mainLoop();
+	
+	protected abstract Solution selectionMouvement();
+	
+	protected abstract Solution solutionInitiale();
 	
 }

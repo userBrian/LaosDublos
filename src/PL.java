@@ -6,13 +6,17 @@ public class PL {
 	private int nbVariables;
 	protected int[][] foncObj;
 	private ArrayList<Equation> contraintes;
-	private ArrayList<Solution> solutions;
+	private Solution solution;
 	protected int dimension;
 	
 	public PL(){
 		
 	}
 
+	public int getDimension(){
+		return dimension;
+	}
+	
 	public int getNbVariables(){
 		return nbVariables;
 	}
@@ -29,8 +33,12 @@ public class PL {
 		return contraintes;
 	}
 
-	public ArrayList<Solution> getSolutions() {
-		return solutions;
+	public Solution getSolution() {
+		return solution;
+	}
+	
+	public void setSolution(Solution sol){
+		solution = sol;
 	}
 	
 	@Override
