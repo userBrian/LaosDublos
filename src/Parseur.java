@@ -13,11 +13,39 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
+import Jama.EigenvalueDecomposition;
+import Jama.Matrix;
 public class Parseur {
 
 	public Parseur() {
 		
+	}
+	
+	private static double[][] calculePos(double[][] cout, int dim){
+		double[][] m = new double[dim][dim];
+		for(int i = 0; i < dim; i++){
+			for(int j = 0; j < dim; j++)
+				m[i][j] = (cout[0][j]*cout[0][j] + cout[i][0]*cout[i][0] - cout[i][j]*cout[i][j])/3;
+		}
+		
+		EigenvalueDecomposition ed = new EigenvalueDecomposition(new Matrix(m, dim, dim));
+		for(int i = 0; i < ed.getV().getArray().length; i++){
+			for(int j = 0; j < ed.getV().getArray()[i].length; j++)
+				System.out.println(ed.getV().getArray()[i][j]);
+		}
+		Matrix s = ed.getD().copy();
+		for(int i = 0; i < dim; i++){
+			for(int j = 0; j < dim; j++)
+				s.getArray()[i][j] = Math.sqrt(ed.getD().getArray()[i][j]);
+		}
+		Matrix x = ed.getV().times(s);
+		for(int i = 0; i < dim; i++){
+			for(int j = 0; j < 2; j++){
+				System.out.print(x.getArray()[i][j]);
+			}
+			System.out.println("");
+		}
+		return x.getArray();
 	}
 
 	public static int[][] parserTSP(FileReader f){
@@ -59,7 +87,7 @@ public class Parseur {
 		double pos[][] = new double[0][0];
 		double cout[][] = new double[0][0];
 		List<double[][]> infos = new ArrayList<double[][]>();
-		int dim;
+		int dim = 0;
 		
 		try{
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -69,38 +97,22 @@ public class Parseur {
 			NodeList nList = doc.getElementsByTagName("vertex");
 			dim = nList.getLength();
 			cout = new double[dim][dim];
-			
-			/*for(int i = 0; i < 280; i++){
-				for(int j = 0; j < 280; j++){
-					if(i == j)
-						cout[i][j] = 1;
-				}
-			}*/
 
 			for (int temp = 0; temp < dim; temp++){ 
 				Node nNode = nList.item(temp);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 					Element eElement = (Element) nNode;
-					//int j = 0;
 					for(int i = 0; i < dim-1; i++){
-						//System.out.println("Premier coût : " + ((Element)(eElement.getElementsByTagName("edge").item(i))).getAttribute("cost"));
-						
 						cout[temp][Integer.parseInt(eElement.getElementsByTagName("edge").item(i).getTextContent())] = Double.parseDouble(((Element)(eElement.getElementsByTagName("edge").item(i))).getAttribute("cost"));
-						//System.out.println(temp + " " + Integer.parseInt(eElement.getElementsByTagName("edge").item(i).getTextContent()) + " " + Double.parseDouble(((Element)(eElement.getElementsByTagName("edge").item(i))).getAttribute("cost")));
-						//j+=1;
 					}
 				}
 			}
-			//System.out.println(doc.getElementsByTagName("vertex").toString());
 		} catch(Exception e){
 			
 		};
 		
-		/*for(int i = 0; i < 280; i++){
-			for(int j = 0; j < 280-1; j++)
-				System.out.println(cout[i][j]);
-		}*/
+		pos = calculePos(cout, dim);		
 		
 		infos.add(pos);
 		infos.add(cout);

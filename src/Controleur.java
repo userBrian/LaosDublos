@@ -19,8 +19,8 @@ public class Controleur {
 		System.out.println(probleme.toString());*/
 		File f = new File("a280.xml");
 		List<double[][]> infos = Parseur.parserXML(f, probleme);
-		probleme = new PLPVC(infos.get(1));
-		System.out.println(probleme.toString());
+		//probleme = new PLPVC(infos.get(1));
+		//System.out.println(probleme.toString());
 		
 	}
 
