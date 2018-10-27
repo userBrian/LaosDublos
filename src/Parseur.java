@@ -33,12 +33,11 @@ public class Parseur {
 			for(int j = 0; j < ed.getV().getArray()[i].length; j++)
 				System.out.println(ed.getV().getArray()[i][j]);
 		}
-		Matrix s = ed.getD().copy();
 		for(int i = 0; i < dim; i++){
 			for(int j = 0; j < dim; j++)
-				s.getArray()[i][j] = Math.sqrt(ed.getD().getArray()[i][j]);
+				ed.getD().getArray()[i][j] = Math.sqrt(ed.getD().getArray()[i][j]);
 		}
-		Matrix x = ed.getV().times(s);
+		Matrix x = ed.getV().times(ed.getD());
 		for(int i = 0; i < dim; i++){
 			for(int j = 0; j < 2; j++){
 				System.out.print(x.getArray()[i][j]);
@@ -48,10 +47,17 @@ public class Parseur {
 		return x.getArray();
 	}
 
-	public static int[][] parserTSP(FileReader f){
+	private static double calculDistance(double x1, double y1, double x2, double y2){
+		return Math.sqrt(Math.abs(x1-x2)*Math.abs(x1-x2) + Math.abs(y1-y2)*Math.abs(y1-y2));
+	}
+	
+	public static List<double[][]> parserTSP(FileReader f){
 		String line;
 		BufferedReader br = new BufferedReader(f);
-		int pos[][], dim, i = 0;
+		int dim = 0, i = 0;
+		double pos[][] = new double[0][0];
+		double cout[][] = new double[0][0];
+		List<double[][]> infos = new ArrayList<double[][]>();
 		
 		try{
 			// Saut de lignes
@@ -60,7 +66,7 @@ public class Parseur {
 			
 			// Dimension du problème
 			dim = Integer.parseInt(br.readLine().substring(11));
-			pos = new int[dim][2];
+			pos = new double[dim][2];
 			
 			// Saut de lignes
 			br.readLine();
@@ -76,11 +82,20 @@ public class Parseur {
 				i++;
 			}
 
-			return pos;
+			infos.add(pos);
 		} catch(IOException e){
 			
 		};
-		return new int[0][0];
+		
+		cout = new double[dim][dim];
+		for(int k = 0; k < dim; k++){
+			for(int j = 0; j < dim; j++)
+				cout[k][j] = calculDistance(pos[k][0], pos[k][1], pos[j][0], pos[j][1]);
+		}
+		
+		infos.add(cout);
+		
+		return infos;
 	}
 	
 	public static List<double[][]> parserXML(File f, PL prob){
