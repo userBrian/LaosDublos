@@ -1,8 +1,18 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 
 public class Parseur {
 
@@ -10,7 +20,7 @@ public class Parseur {
 		
 	}
 
-	private int[][] parserTSP(FileReader f){
+	public static int[][] parserTSP(FileReader f){
 		String line;
 		BufferedReader br = new BufferedReader(f);
 		int pos[][], dim, i = 0;
@@ -45,11 +55,61 @@ public class Parseur {
 		return new int[0][0];
 	}
 	
-	private int[][] parserXML(FileReader f){
-		return new int[0][0];
+	public static List<double[][]> parserXML(File f, PL prob){
+		double pos[][] = new double[0][0];
+		double cout[][] = new double[0][0];
+		List<double[][]> infos = new ArrayList<double[][]>();
+		int dim;
+		
+		try{
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(f);
+			
+			NodeList nList = doc.getElementsByTagName("vertex");
+			dim = nList.getLength();
+			cout = new double[dim][dim];
+			
+			/*for(int i = 0; i < 280; i++){
+				for(int j = 0; j < 280; j++){
+					if(i == j)
+						cout[i][j] = 1;
+				}
+			}*/
+
+			for (int temp = 0; temp < dim; temp++){ 
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					//int j = 0;
+					for(int i = 0; i < dim-1; i++){
+						//System.out.println("Premier coût : " + ((Element)(eElement.getElementsByTagName("edge").item(i))).getAttribute("cost"));
+						
+						cout[temp][Integer.parseInt(eElement.getElementsByTagName("edge").item(i).getTextContent())] = Double.parseDouble(((Element)(eElement.getElementsByTagName("edge").item(i))).getAttribute("cost"));
+						//System.out.println(temp + " " + Integer.parseInt(eElement.getElementsByTagName("edge").item(i).getTextContent()) + " " + Double.parseDouble(((Element)(eElement.getElementsByTagName("edge").item(i))).getAttribute("cost")));
+						//j+=1;
+					}
+				}
+			}
+			//System.out.println(doc.getElementsByTagName("vertex").toString());
+		} catch(Exception e){
+			
+		};
+		
+		/*for(int i = 0; i < 280; i++){
+			for(int j = 0; j < 280-1; j++)
+				System.out.println(cout[i][j]);
+		}*/
+		
+		infos.add(pos);
+		infos.add(cout);
+		
+		return infos;
+				
 	}
 	
-	public int[][] parserFichier(File f){
+	/*public int[][] parserFichier(File f){
 		String ext = f.getName().split("\\.")[1];
 		switch(ext){
 			case "tsp":
@@ -70,9 +130,9 @@ public class Parseur {
 				System.err.println("Ce type de fichier n'est pas reconnu par l'application.");
 		}
 		return new int[0][0];
-	}
+	}*/
 	
-	private String removeBlanks(String str){
+	private static String removeBlanks(String str){
 		while(str.charAt(0) == ' ')
 			str = str.substring(1);
 		return str;

@@ -4,7 +4,7 @@ public class PL {
 
 	private boolean maximiser;
 	private int nbVariables;
-	protected int[][] foncObj;
+	protected double[][] foncObj;
 	private ArrayList<Equation> contraintes;
 	private Solution solution;
 	protected int dimension;
@@ -17,6 +17,10 @@ public class PL {
 		return dimension;
 	}
 	
+	public void setDimension(int dim){
+		dimension = dim;
+	}
+	
 	public int getNbVariables(){
 		return nbVariables;
 	}
@@ -25,7 +29,7 @@ public class PL {
 		return maximiser;
 	}
 
-	public int[][] getFoncObj() {
+	public double[][] getFoncObj() {
 		return foncObj;
 	}
 
