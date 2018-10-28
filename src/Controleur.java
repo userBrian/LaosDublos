@@ -24,6 +24,7 @@ public class Controleur {
 			
 		}*/
 		List<double[][]> infos = Parseur.parserXML(new File("a280.xml"));
+		fenetre.affichageVilles(infos.get(0));
 		//System.out.println(probleme.toString());
 		
 	}
