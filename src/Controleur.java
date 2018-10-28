@@ -22,10 +22,12 @@ public class Controleur {
 		} catch(FileNotFoundException e){
 			
 		}*/
+
 		List<double[][]> infos = new ArrayList<double[][]>();
 		infos = Parseur.parserXML(new File("a280.xml"));
 		probleme = new PLPVC(infos.get(1));
 		System.out.println(infos.get(0)[1][0]);
+
 		fenetre.affichageVilles(infos.get(0));
 		//System.out.println(probleme.toString());
 		

@@ -221,7 +221,9 @@ public class Affichage extends JFrame{
 			
 			for(Vec2d v : villes)
 			{
+				
 				g.fillOval((int)((v.x - minX) * coeffX), (int)((v.y - minY) * coeffY), 10, 10);
+				System.out.println((int)((v.x - minX) * coeffX)+ "   " + (int)((v.y - minY) * coeffY));
 			}
 		}
 	}
