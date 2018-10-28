@@ -190,9 +190,38 @@ public class Affichage extends JFrame{
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
+			int maxX = -1;
+			int minX = -1;
+			int maxY = -1;
+			int minY = -1;
 			for(Vec2d v : villes)
 			{
-				g.drawOval((int)v.x, (int)v.y, 2, 2);
+				if(v.x < minX || minX == -1)
+				{
+					minX = (int)v.x;
+				}
+				if(v.y < minY || minY == -1)
+				{
+					minY = (int)v.y;
+				}
+				if(maxX == -1|| v.x > maxX )
+				{
+					maxX = (int)v.x;
+				}
+				if(maxY == -1 || v.y > maxY)
+				{
+					maxY = (int)v.y;
+				}
+			}
+			minX -= 1;
+			minY -= 1;
+
+			float coeffX = this.getWidth()/(float)(maxX - minX);
+			float coeffY = this.getHeight()/(float)(maxY - minY);
+			
+			for(Vec2d v : villes)
+			{
+				g.fillOval((int)((v.x - minX) * coeffX), (int)((v.y - minY) * coeffY), 10, 10);
 			}
 		}
 	}
