@@ -46,8 +46,15 @@ public class Parseur {
 				S.set(i, j, a);
 			}
 		}
-
-		return U.times(S).getArray();
+		
+		Matrix x = U.times(S);
+		double[][] pos = new double[dim][2];
+		for(i = 0; i < dim; i++){
+			for(j = 0; j < 2; j++)
+				pos[i][j] = x.get(i, dim-(2-j));
+		}
+		
+		return pos;
 	}
 
 	private static double calculDistance(double x1, double y1, double x2, double y2){
