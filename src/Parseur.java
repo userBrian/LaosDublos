@@ -24,26 +24,31 @@ public class Parseur {
 	private static double[][] calculePos(double[][] cout, int dim){
 		double[][] m = new double[dim][dim];
 		for(int i = 0; i < dim; i++){
-			for(int j = 0; j < dim; j++)
-				m[i][j] = (cout[0][j]*cout[0][j] + cout[i][0]*cout[i][0] - cout[i][j]*cout[i][j])/3;
+			for(int j = 0; j < dim; j++){
+				//System.out.print(cout[i][j]);
+				m[i][j] = (cout[0][j]*cout[0][j] + cout[i][0]*cout[i][0] - cout[i][j]*cout[i][j])/2;
+			}
+			//System.out.println("\n");
 		}
 		
 		EigenvalueDecomposition ed = new EigenvalueDecomposition(new Matrix(m, dim, dim));
-		for(int i = 0; i < ed.getV().getArray().length; i++){
-			for(int j = 0; j < ed.getV().getArray()[i].length; j++)
-				System.out.println(ed.getV().getArray()[i][j]);
-		}
+		/*for(int i = 0; i < ed.getD().getArray().length; i++){
+			for(int j = 0; j < ed.getD().getArray()[i].length; j++)
+				System.out.println(ed.getD().getArray()[i][j]);
+		}*/
+		//ed.getD().print(5, 5);
 		for(int i = 0; i < dim; i++){
 			for(int j = 0; j < dim; j++)
-				ed.getD().getArray()[i][j] = Math.sqrt(ed.getD().getArray()[i][j]);
+				ed.getD().set(i, j, Math.sqrt(ed.getD().getArray()[i][j]));
 		}
 		Matrix x = ed.getV().times(ed.getD());
-		for(int i = 0; i < dim; i++){
+		/*for(int i = 0; i < dim; i++){
 			for(int j = 0; j < 2; j++){
 				System.out.print(x.getArray()[i][j]);
 			}
 			System.out.println("");
-		}
+		}*/
+		//x.print(2, 3);
 		return x.getArray();
 	}
 
@@ -98,7 +103,7 @@ public class Parseur {
 		return infos;
 	}
 	
-	public static List<double[][]> parserXML(File f, PL prob){
+	public static List<double[][]> parserXML(File f){
 		double pos[][] = new double[0][0];
 		double cout[][] = new double[0][0];
 		List<double[][]> infos = new ArrayList<double[][]>();

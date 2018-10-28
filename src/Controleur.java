@@ -13,14 +13,8 @@ public class Controleur {
 	private Recuit recuit;
 
 	public static void main(String[] args) {
-		/*Parseur p = new Parseur();
-		int[][] pos = p.parserFichier(new File("a280.xml"));
-		probleme = new PLPVC(pos);
 		fenetre = new Affichage();
-		fenetre.affichageVilles(pos);
-		System.out.println(probleme.toString());*/
-		fenetre = new Affichage();
-		File f = new File("a280.tsp");
+		/*File f = new File("a280.tsp");
 		try{
 			List<double[][]> infos = Parseur.parserTSP(new FileReader(f));
 			probleme = new PLPVC(infos.get(1));
@@ -28,8 +22,8 @@ public class Controleur {
 			System.out.println(probleme.toString());
 		} catch(FileNotFoundException e){
 			
-		}
-		
+		}*/
+		List<double[][]> infos = Parseur.parserXML(new File("a280.xml"));
 		//System.out.println(probleme.toString());
 		
 	}
