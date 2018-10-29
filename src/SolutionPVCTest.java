@@ -1,4 +1,6 @@
-/*import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
@@ -71,6 +73,35 @@ class SolutionPVCTest {
 		
 	}
 	
+	@Test
+	void testRemplirCycleSolution()
+	{
+		boolean matSol[][] = new boolean[4][4];
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				matSol[i][j] = false;
+			}
+		}
+		matSol[0][1] = true;
+		matSol[1][2] = true;
+		matSol[2][3] = true;
+		matSol[3][0] = true;
+		
+		ArrayList<Integer> expected = new ArrayList<Integer>();
+		expected.add(0);
+		expected.add(1);
+		expected.add(2);
+		expected.add(3);
+		expected.add(0);
+		
+		SolutionPVC solPVC = new SolutionPVC(matSol);
+		
+		solPVC.remplirCycleSolution();
+		solPVC.printCycleSolution();
+		
+		assertEquals(expected, solPVC.getCycleSolution());
+	}
+	
 	
 
-}*/
+}

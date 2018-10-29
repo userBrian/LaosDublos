@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /*
  * Cette classe contient, en plus de solution, une representation matricielle de la soltuion qui 
  * facilite les calcls et operations dessus, ainsi que des fonctions vérifiants les cotraintes
@@ -11,6 +13,14 @@ public class SolutionPVC extends Solution {
 	 * la case vaudra false.
 	 */
 	private boolean matriceSolution[][];
+	
+	/*
+	 * Representation de la solution sous forme d'une liste d'identifiant 
+	 * ex 1-2-3-4-1
+	 * 
+	 * Plus facile comprendre lors de l'affichage de la solution et plus facile a manipuler pour le choix des voisins
+	 */
+	private ArrayList<Integer> cycleSolution;
 	
 	public SolutionPVC(int taille) {
 		super(taille);
@@ -45,6 +55,36 @@ public class SolutionPVC extends Solution {
 		{
 			matriceSolution[i%tailleMatrice][i/tailleMatrice] = resultat[i] == 1 ? true : false;
 		}
+	}
+	
+	public void remplirCycleSolution()
+	{
+		cycleSolution = new ArrayList<Integer>();
+		int villeActuelle = 0;
+		cycleSolution.add(0);
+		
+		do
+		{
+			for (int i = 0; i < getTaille(); i++) {
+				if (matriceSolution[villeActuelle][i])
+				{
+					villeActuelle = i; 
+					break;
+				}
+			}
+			cycleSolution.add(villeActuelle);
+		}
+		while(villeActuelle != 0);
+	}
+	
+	public void printCycleSolution()
+	{
+		String str = "";
+		for(int ville : cycleSolution)
+		{
+			str += ville + "\t";
+		}
+		System.out.println(str);
 	}
 
 	public boolean[][] getMatriceSolution() {
@@ -136,4 +176,10 @@ public class SolutionPVC extends Solution {
 	public void setTrue(int x, int y){
 		matriceSolution[x][y] = true;
 	}
+
+	public ArrayList<Integer> getCycleSolution() {
+		return cycleSolution;
+	}
+	
+	
 }

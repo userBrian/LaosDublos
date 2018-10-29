@@ -57,7 +57,7 @@ public class PLPVC extends PL {
 			}
 		
 		//contrainte de sous tours
-		//TODO
+		//pas todo en fait ça se fait plus tard, pendant l'oracle
 			
 		//valeurs des variables, sera defini autrement dans IloCPLEX
 			
