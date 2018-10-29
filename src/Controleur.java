@@ -27,7 +27,6 @@ import javax.swing.filechooser.FileSystemView;
 public class Controleur extends JFrame {
 	
 	/////////////DONNEES/////////////
-	private int hey;
 	private PL probleme;
 	private MethIte iterative;
 	private Recuit recuit;
