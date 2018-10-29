@@ -12,6 +12,8 @@ public class Equation {
 		this.signe = signe;
 		this.secondMembre = secondMembre;
 	}
+	
+	
 
 	public int getNbVariables() {
 		return nbVariables;
