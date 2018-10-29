@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * 
  */
@@ -21,15 +23,15 @@ public class RecuitPVC extends Recuit {
 	@Override
 	protected void mainLoop() {
 		int ite = 0;
-		Solution solActu = solutionInitiale();
-		Solution meilleureSol = solActu;
+		SolutionPVC solActu = solutionInitiale();
+		SolutionPVC meilleureSol = solActu;
 		int deltaCout;
 		
 		initialiserTemp();
 		
 		while(temperature > 0){	// TODO : Définir un seuil
 			while(ite < probleme.getDimension()){
-				Solution x = selectionMouvement();
+				SolutionPVC x = selectionMouvement(solActu);
 				
 				deltaCout = x.getCout() - solActu.getCout();
 				if(deltaCout < 0){
@@ -38,9 +40,8 @@ public class RecuitPVC extends Recuit {
 						meilleureSol = solActu;
 				}
 				else{
-					if(Math.random() < Math.exp(deltaCout/temperature)){
+					if(Math.random() < Math.exp(deltaCout/temperature))
 						solActu = x;
-					}
 				}
 				
 				ite++;
@@ -52,16 +53,45 @@ public class RecuitPVC extends Recuit {
 		probleme.setSolution(meilleureSol);
 	}
 
-	@Override
-	protected Solution selectionMouvement(){
-		// TODO
-		return new Solution(0);
-	}
 	
 	@Override
-	protected Solution solutionInitiale(){
-		// TODO
-		return new Solution(0);
+	protected SolutionPVC selectionMouvement(SolutionPVC solInit){
+		SolutionPVC voisin = solInit;
+		do{
+			// TODO : Algo 3-opt
+		}while(!voisin.solutionValide());
+		return voisin;
+	}
+	
+	/**
+	 * Retourne une solution initiale pour le PVC. L'algorithme consiste a
+	 * choisir a chque fois l'arc le plus court. Il interdit les sous-tours.
+	 */
+	@Override
+	protected SolutionPVC solutionInitiale(){
+		SolutionPVC solInit = new SolutionPVC(probleme.getDimension());
+		double[][] couts = probleme.getFoncObj();
+		double min = Double.MAX_VALUE;
+		int index = 0, nbIte = 0, i = 0;
+		while(nbIte < probleme.getDimension()){
+			System.out.print(i +"->");
+			for(int j = 0; j < probleme.getDimension(); j++){
+				if(couts[i][j] != 0 && couts[i][j] < min){
+					min = couts[i][j];
+					index = j;
+				}
+			}
+			for(int j = 0; j < probleme.getDimension(); j++)
+				couts[j][i] = Double.MAX_VALUE;
+			min = Double.MAX_VALUE;
+			System.out.println(index);
+			solInit.setTrue(nbIte, index);
+			i = index;
+			index = 0;
+			nbIte++;
+			
+		}
+		return solInit;
 	}
 
 }

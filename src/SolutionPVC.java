@@ -5,8 +5,20 @@
  */
 public class SolutionPVC extends Solution {
 
+	/**
+	 * Representation matricielle de la solution. Dans cette matrice, la case ij represente
+	 * l'arc allant de la ville i a la ville j. Si la case vaut true alors l'arc a ete choisi dans la solution, sinon
+	 * la case vaudra false.
+	 */
+	private boolean matriceSolution[][];
+	
 	public SolutionPVC(int taille) {
-		super(taille);		
+		super(taille);
+		matriceSolution = new boolean[taille][taille];
+		for(int i = 0; i < 4; i++){
+			for(int j = 0; j < 4; j++)
+				matriceSolution[i][j] = false;
+		}
 	}
 	
 	public SolutionPVC(Solution sol)
@@ -23,14 +35,6 @@ public class SolutionPVC extends Solution {
 		super(matriceSolution.length);
 		this.matriceSolution = matriceSolution;
 	}
-
-	/*
-	 * Representation matricielle de la solution. Dans cette matrice, la case ij représente
-	 * l'arc allant de la ville i à la ville j. Si la case vaut true alors l'arc a été choisi dans la soluion , sinon
-	 * la case vaudra false
-	 */
-	private boolean matriceSolution[][];
-	
 	
 	public void remplirMatriceSolution(int resultat[])
 	{
@@ -127,5 +131,9 @@ public class SolutionPVC extends Solution {
 	boolean solutionValide()
 	{
 		return valeursVariablesValides() && contrainte1satisfaite() && contrainteSousToursSatisfaite();
+	}
+	
+	public void setTrue(int x, int y){
+		matriceSolution[x][y] = true;
 	}
 }

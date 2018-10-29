@@ -16,12 +16,14 @@ import org.w3c.dom.NodeList;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 public class Parseur {
-
-	public Parseur() {
-		
-	}
 	
-	private static double[][] calculePos(double[][] cout, int dim){
+	/**
+	 * Determine les coordonnees des villes a partir de la matrice des distances
+	 * @param cout Matrice des distances
+	 * @param dim Taille du probleme
+	 * @return Tableau de coordonnees [dim][2], chaque ligne correspondant a une ville
+	 */
+	private static double[][] calculePos(double[][] cout, int dim){	// TODO : commenter et optimiser
 		double[][] M = new double[dim][dim];
 		int i = 0;
 		int j = 0;
@@ -57,10 +59,26 @@ public class Parseur {
 		return pos;
 	}
 
-	private static double calculDistance(double x1, double y1, double x2, double y2){
-		return Math.sqrt(Math.abs(x1-x2)*Math.abs(x1-x2) + Math.abs(y1-y2)*Math.abs(y1-y2));
+	/**
+	 * Determine les distances entre les villes a partir du tableau des coordonnees
+	 * @param pos Tableau des coordonnees des villes
+	 * @param dim Taille du probleme
+	 * @return Matrice [dim][dim] contenant les distances entre chaque ville
+	 */
+	private static double[][] calculDistance(double[][] pos, int dim){
+		double[][] cout = new double[dim][2];
+		for(int i = 0; i < dim; i++){
+			for(int j = 0; j < dim; j++)
+				cout[i][j] = Math.sqrt(Math.abs(pos[i][0]-pos[j][0])*Math.abs(pos[i][0]-pos[j][0]) + Math.abs(pos[i][1]-pos[j][1])*Math.abs(pos[i][1]-pos[j][1]));
+		}
+		return cout;
 	}
 	
+	/**
+	 * Parse un fichier .tsp
+	 * @param f Fichier .tsp
+	 * @return Liste contenant les positions et les distances pour chaque ville
+	 */
 	public static List<double[][]> parserTSP(FileReader f){
 		String line;
 		BufferedReader br = new BufferedReader(f);
@@ -94,20 +112,23 @@ public class Parseur {
 
 			infos.add(pos);
 		} catch(IOException e){
-			
+			e.printStackTrace();
 		};
 		
+		// Calcul des distances
 		cout = new double[dim][dim];
-		for(int k = 0; k < dim; k++){
-			for(int j = 0; j < dim; j++)
-				cout[k][j] = calculDistance(pos[k][0], pos[k][1], pos[j][0], pos[j][1]);
-		}
+		cout = calculDistance(pos, dim);
 		
 		infos.add(cout);
 		
 		return infos;
 	}
 	
+	/**
+	 * Parse un fichier .xml
+	 * @param f Fichier .xml
+	 * @return Liste contenant les positions et les distances pour chaque ville
+	 */
 	public static List<double[][]> parserXML(File f){
 		double pos[][] = new double[0][0];
 		double cout[][] = new double[0][0];
@@ -126,15 +147,13 @@ public class Parseur {
 			for (int temp = 0; temp < dim; temp++){ 
 				Node nNode = nList.item(temp);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
 					Element eElement = (Element) nNode;
-					for(int i = 0; i < dim-1; i++){
+					for(int i = 0; i < dim-1; i++)
 						cout[temp][Integer.parseInt(eElement.getElementsByTagName("edge").item(i).getTextContent())] = Double.parseDouble(((Element)(eElement.getElementsByTagName("edge").item(i))).getAttribute("cost"));
-					}
 				}
 			}
 		} catch(Exception e){
-			
+			e.printStackTrace();
 		};
 		
 		pos = calculePos(cout, dim);
@@ -145,29 +164,11 @@ public class Parseur {
 				
 	}
 	
-	/*public int[][] parserFichier(File f){
-		String ext = f.getName().split("\\.")[1];
-		switch(ext){
-			case "tsp":
-				try{
-					return parserTSP(new FileReader(f));
-				} catch(FileNotFoundException e){
-
-				};
-				break;
-			case "xml":
-				try{
-					return parserXML(new FileReader(f));
-				} catch(FileNotFoundException e){
-					
-				};
-				break;
-			default:
-				System.err.println("Ce type de fichier n'est pas reconnu par l'application.");
-		}
-		return new int[0][0];
-	}*/
-	
+	/**
+	 * Retire les espaces en debut de ligne
+	 * @param str Chaine a traiter
+	 * @return Chaine traitee
+	 */
 	private static String removeBlanks(String str){
 		while(str.charAt(0) == ' ')
 			str = str.substring(1);

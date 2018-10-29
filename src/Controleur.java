@@ -12,24 +12,22 @@ public class Controleur {
 	private Recuit recuit;
 
 	public static void main(String[] args) {
-		fenetre = new Affichage();
-		/*File f = new File("a280.tsp");
-		try{
-			List<double[][]> infos = Parseur.parserTSP(new FileReader(f));
-			probleme = new PLPVC(infos.get(1));
-			fenetre.affichageVilles(infos.get(0));
-			System.out.println(probleme.toString());
-		} catch(FileNotFoundException e){
-			
-		}*/
+		//fenetre = new Affichage();
 
 		List<double[][]> infos = new ArrayList<double[][]>();
 		infos = Parseur.parserXML(new File("a280.xml"));
 		probleme = new PLPVC(infos.get(1));
-		System.out.println(infos.get(0)[1][0]);
+		RecuitPVC r = new RecuitPVC((PLPVC)probleme);
+		System.out.println("Go !");
+		SolutionPVC sol = r.solutionInitiale();
+		for(int i = 0; i < 280; i++){
+			for(int j = 0; j < 280; j++)
+				System.out.println(sol.getMatriceSolution()[i][j]);
+			System.out.println("\n");
+		}
+		//System.out.println(infos.get(0)[1][0]);
 
-		fenetre.affichageVilles(infos.get(0));
-		//System.out.println(probleme.toString());
+		//fenetre.affichageVilles(infos.get(0));
 		
 	}
 

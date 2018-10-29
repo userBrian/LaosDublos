@@ -17,7 +17,7 @@ public abstract class Recuit {
 	
 	protected abstract void mainLoop();
 	
-	protected abstract Solution selectionMouvement();
+	protected abstract Solution selectionMouvement(SolutionPVC solInit);
 	
 	protected abstract Solution solutionInitiale();
 	

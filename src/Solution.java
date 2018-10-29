@@ -3,7 +3,7 @@ public class Solution {
 	
 	private int resultat[];
 	private int cout;
-	private int taille; //nb de variables de la solution 
+	protected int taille; //nb de variables de la solution 
 
 	public Solution(int taille) {
 		this.taille = taille;
