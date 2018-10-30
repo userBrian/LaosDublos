@@ -57,6 +57,7 @@ public class RecuitPVC extends Recuit {
 	@Override
 	protected SolutionPVC selectionMouvement(SolutionPVC solInit){
 		SolutionPVC voisin;
+		solInit.remplirCycleSolution();
 		do{
 			// TODO : Algo 3-opt
 			
