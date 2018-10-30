@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /*
  * Cette classe contient, en plus de solution, une representation matricielle de la soltuion qui 
@@ -25,16 +28,25 @@ public class SolutionPVC extends Solution {
 	public SolutionPVC(int taille) {
 		super(taille);
 		matriceSolution = new boolean[taille][taille];
-		for(int i = 0; i < 4; i++){
-			for(int j = 0; j < 4; j++)
+		for(int i = 0; i < taille; i++){
+			for(int j = 0; j < taille; j++)
 				matriceSolution[i][j] = false;
 		}
 	}
+	
+	
 	
 	public SolutionPVC(Solution sol)
 	{
 		super(sol.getTaille());
 		remplirMatriceSolution(sol.getResultat());
+		remplirCycleSolution();
+	}
+	
+	public SolutionPVC(ArrayList<Integer> cycle)
+	{
+		super(cycle.size()-1);
+		setAll(cycle);
 	}
 	
 	/*
@@ -44,6 +56,7 @@ public class SolutionPVC extends Solution {
 	{
 		super(matriceSolution.length);
 		this.matriceSolution = matriceSolution;
+		remplirCycleSolution();
 	}
 	
 	public void remplirMatriceSolution(int resultat[])
@@ -181,5 +194,59 @@ public class SolutionPVC extends Solution {
 		return cycleSolution;
 	}
 	
+	public ArrayList<Integer> genererInversion2Opt()
+	{
+		ArrayList<Integer> inversion = new ArrayList<Integer>();
+		Random rng = new Random();
+
+		int extremite1 = rng.nextInt(cycleSolution.size() - 3) + 1;
+		int extremite2 = rng.nextInt(cycleSolution.size() - extremite1 - 2) + extremite1 + 1; 
+		//TODO etudier si c'est vraiment la meilleure sol pour un random
+//		System.out.println("bornes : " + extremite1 + extremite2);
+		
+		for (int i = 0; i < extremite1; i++) {
+			inversion.add(cycleSolution.get(i));
+		}
+		
+		for (int i = extremite2; i >= extremite1; i--) {
+			inversion.add(cycleSolution.get(i));
+		}
+		
+		for (int i = extremite2 + 1; i < cycleSolution.size(); i++) {
+			inversion.add(cycleSolution.get(i));
+		}
+		
+		return inversion;
+	}
+	
+	public void setResultat(boolean matSol[][])
+	{
+		for (int j = 0; j < matSol.length; j++) {
+			for (int i = 0; i < matSol.length; i++) {
+				getResultat()[i + j*this.getTaille()] = matSol[i][j] ? 1 : 0;
+				//TODO est-ce que ça marche ça ?
+			}
+		}
+	}
+	
+	public void setAll(ArrayList<Integer> cycle)
+	{
+		cycleSolution = cycle;
+		
+		matriceSolution = new boolean[taille][taille];
+		for(int i = 0; i < taille; i++){
+			for(int j = 0; j < taille; j++)
+				matriceSolution[i][j] = false;
+		}
+		
+		System.out.println("cycle size " + cycle.size());
+		
+		for (int i = 0; i < cycle.size()-1; i++) {
+			setTrue(cycle.get(i), cycle.get(i+1));
+//			System.out.println("i " + i + "size - 2 "+ (cycle.size()-2)+ "set " + cycle.get(i) + "-" + cycle.get(i+1) + " to true");
+		}
+		
+		setResultat(matriceSolution);
+	}
 	
 }

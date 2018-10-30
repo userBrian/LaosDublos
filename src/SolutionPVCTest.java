@@ -103,5 +103,71 @@ class SolutionPVCTest {
 	}
 	
 	
+	/*
+	 * Vu que c'est du random je sais pas trop comment assert
+	 */
+	@Test
+	void testGenererInversion2Opt()
+	{
+		boolean matSol[][] = new boolean[6][6];
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 6; j++) {
+				matSol[i][j] = false;
+			}
+		}
+		matSol[0][1] = true;
+		matSol[1][2] = true;
+		matSol[2][3] = true;
+		matSol[3][4] = true;
+		matSol[4][5] = true;
+		matSol[5][0] = true;
+		
+		SolutionPVC solPVC = new SolutionPVC(matSol);
 
+		System.out.println("Cycle de depart");
+		solPVC.printCycleSolution();
+		
+		for (int i = 0; i < 10; i++)
+		{
+			System.out.println("Inversion " + i + " : " + solPVC.genererInversion2Opt().toString());
+		}
+	}
+	
+	@Test
+	void testSetAll()
+	{
+		ArrayList<Integer> cycle = new ArrayList<Integer>();
+		cycle.add(0);
+		cycle.add(1);
+		cycle.add(2);
+		cycle.add(3);
+		cycle.add(0);
+		
+		SolutionPVC solPVC = new SolutionPVC(cycle);
+		
+		assertEquals(cycle, solPVC.getCycleSolution());
+		
+		boolean expectedMatrice[][] = {
+				
+				{false, true, false, false},
+				{false, false, true, false},
+				{false, false, false, true},
+				{true, false, false, false}
+				
+		};
+		
+		for (int i = 0; i < expectedMatrice.length; i++) {
+			for (int j = 0; j < expectedMatrice.length; j++) {
+				assertEquals(expectedMatrice[i][j], solPVC.getMatriceSolution()[i][j]);
+			}
+		}
+		
+		
+		int expectedResultat[] = {0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};
+		
+		for (int i = 0; i < expectedResultat.length; i++) {
+			assertEquals(expectedResultat[i], solPVC.getResultat()[i]);
+
+		}
+	}
 }

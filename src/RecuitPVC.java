@@ -29,7 +29,7 @@ public class RecuitPVC extends Recuit {
 		
 		initialiserTemp();
 		
-		while(temperature > 0){	// TODO : Définir un seuil
+		while(temperature > 0){	// TODO : Dï¿½finir un seuil
 			while(ite < probleme.getDimension()){
 				SolutionPVC x = selectionMouvement(solActu);
 				
@@ -56,9 +56,13 @@ public class RecuitPVC extends Recuit {
 	
 	@Override
 	protected SolutionPVC selectionMouvement(SolutionPVC solInit){
-		SolutionPVC voisin = solInit;
+		SolutionPVC voisin;
 		do{
 			// TODO : Algo 3-opt
+			
+			//Ici c'est le 2-opt alias l'inversion du sous-tour
+			voisin = new SolutionPVC(solInit.genererInversion2Opt());
+			
 		}while(!voisin.solutionValide());
 		return voisin;
 	}
