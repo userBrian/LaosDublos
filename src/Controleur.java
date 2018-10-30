@@ -22,6 +22,11 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileSystemView;
 
+import ilog.concert.IloException;
+import ilog.concert.IloLinearNumExpr;
+import ilog.concert.IloNumVar;
+import ilog.cplex.IloCplex;
+
 
 
 public class Controleur extends JFrame {
@@ -173,7 +178,7 @@ public class Controleur extends JFrame {
 	}
 	
 		
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		/*File f = new File("a280.tsp");
 		try{
 			List<double[][]> infos = Parseur.parserTSP(new FileReader(f));
@@ -183,7 +188,7 @@ public class Controleur extends JFrame {
 		} catch(FileNotFoundException e){
 		}*/
 		
-		Controleur c = new Controleur();
+		/*Controleur c = new Controleur();
 		List<double[][]> infos = new ArrayList<double[][]>();
 		infos = Parseur.parserXML(new File("a280.xml"));
 		c.probleme = new PLPVC(infos.get(1));
@@ -198,8 +203,10 @@ public class Controleur extends JFrame {
 		
 		System.out.println(infos.get(0)[1][0]);
 		c.panAffichageVilles.getVilles(infos.get(0));
-		c.panAffichageVilles.affichageVilles();	
+		c.panAffichageVilles.affichageVilles();
 		c.panAffichageVilles.tracerSolution(sol);
-	}
+		
+		
+	}*/
 
 }
