@@ -178,7 +178,7 @@ public class Controleur extends JFrame {
 	}
 	
 		
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		/*File f = new File("a280.tsp");
 		try{
 			List<double[][]> infos = Parseur.parserTSP(new FileReader(f));
@@ -204,9 +204,14 @@ public class Controleur extends JFrame {
 		System.out.println(infos.get(0)[1][0]);
 		c.panAffichageVilles.getVilles(infos.get(0));
 		c.panAffichageVilles.affichageVilles();
-		c.panAffichageVilles.tracerSolution(sol);
+		c.panAffichageVilles.tracerSolution(sol);*/
 		
-		
-	}*/
+		Controleur c = new Controleur();
+		List<double[][]> infos = new ArrayList<double[][]>();
+		infos = Parseur.parserXML(new File("a280.xml"));
+		c.probleme = new PLPVC(infos.get(1));
+		CPLEX cplex = new CPLEX();
+		cplex.solveBrian((PLPVC)c.probleme);
+	}
 
 }

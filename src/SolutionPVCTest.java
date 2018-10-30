@@ -1,4 +1,4 @@
-import static org.junit.jupiter.api.Assertions.*;
+/*import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
@@ -101,12 +101,12 @@ class SolutionPVCTest {
 		
 		assertEquals(expected, solPVC.getCycleSolution());
 	}
-	
+	*/
 	
 	/*
 	 * Vu que c'est du random je sais pas trop comment assert
 	 */
-	@Test
+	/*@Test
 	void testGenererInversion2Opt()
 	{
 		boolean matSol[][] = new boolean[6][6];
@@ -170,4 +170,4 @@ class SolutionPVCTest {
 
 		}
 	}
-}
+}*/
