@@ -208,10 +208,16 @@ public class Controleur extends JFrame {
 		
 		Controleur c = new Controleur();
 		List<double[][]> infos = new ArrayList<double[][]>();
-		infos = Parseur.parserXML(new File("a280.xml"));
-		c.probleme = new PLPVC(infos.get(1));
+		//infos = Parseur.parserXML(new File("a280.xml"));
+		//c.probleme = new PLPVC(infos.get(1));
+		double[][] coor = {{10, 5}, {5, 10}, {15, 10}, {7, 20}, {13, 20}};
+		double[][] cout = {{0, 1, 2, 3, 4}, {1, 0, 3, 6, 2}, {2, 3, 0, 7, 8}, {3, 6, 7, 0, 1}, {4, 2, 8, 1, 0}};
 		CPLEX cplex = new CPLEX();
-		cplex.solveBrian((PLPVC)c.probleme);
+		c.probleme = new PLPVC(cout);
+		c.panAffichageVilles.getVilles(coor);
+		c.panAffichageVilles.affichageVilles();
+		cplex.solveBrian((PLPVC)c.probleme).printCycleSolution();
+		//c.panAffichageVilles.tracerSolution(cplex.solveBrian((PLPVC)c.probleme));
 	}
 
 }

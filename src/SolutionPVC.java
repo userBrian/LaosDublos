@@ -46,7 +46,8 @@ public class SolutionPVC extends Solution {
 	public SolutionPVC(ArrayList<Integer> cycle)
 	{
 		super(cycle.size()-1);
-		setAll(cycle);
+		//setAll(cycle);
+		this.cycleSolution = cycle;
 	}
 	
 	/*
