@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -247,6 +248,19 @@ public class SolutionPVC extends Solution {
 		}
 		
 		setResultat(matriceSolution);
+	}
+	
+	public static SolutionPVC genererSolutionAleatoire(int taille)
+	{
+		ArrayList<Integer> cycle = new ArrayList<Integer>();
+		
+		for (int i = 0; i < taille; i++) {
+			cycle.add(i);
+		}
+		Collections.shuffle(cycle);
+		cycle.add(cycle.get(0));
+		
+		return new SolutionPVC(cycle);
 	}
 	
 }

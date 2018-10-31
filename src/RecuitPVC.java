@@ -21,27 +21,24 @@ public class RecuitPVC extends Recuit {
 	 * @see Recuit#mainLoop()
 	 */
 	@Override
-	protected void mainLoop() {
+	protected void mainLoop() {//je crois pas qu'on devrait avoir a redefinir cette fonction
 		int ite = 0;
-		SolutionPVC solActu = solutionInitiale();
-		SolutionPVC meilleureSol = solActu;
 		int deltaCout;
 		
 		initialiserTemp();
 		
 		while(temperature > 0){	// TODO : D�finir un seuil
 			while(ite < probleme.getDimension()){
-				SolutionPVC x = selectionMouvement(solActu);
+				SolutionPVC x = selectionMouvement((SolutionPVC) getSolutionActuelle());
 				
-				deltaCout = x.getCout() - solActu.getCout();
-				if(deltaCout < 0){
-					solActu = x;
-					if(solActu.getCout() < meilleureSol.getCout())
-						meilleureSol = solActu;
-				}
-				else{
-					if(Math.random() < Math.exp(deltaCout/temperature))
-						solActu = x;
+				if (accepterSolution(x))
+				{
+					setSolutionActuelle(x);
+					if (getSolutionActuelle().getCout() < getMeilleurCout())
+					{
+						setMeilleurCout(getSolutionActuelle().getCout());
+						setMeilleureSolution(getSolutionActuelle());
+					}
 				}
 				
 				ite++;
@@ -50,7 +47,7 @@ public class RecuitPVC extends Recuit {
 			temperature *= 0.9;
 		}
 		
-		probleme.setSolution(meilleureSol);
+		probleme.setSolution(getMeilleureSolution());
 	}
 
 	
