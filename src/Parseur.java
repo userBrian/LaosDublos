@@ -24,25 +24,22 @@ public class Parseur {
 	 * @return Tableau de coordonnees [dim][2], chaque ligne correspondant a une ville
 	 */
 	private static double[][] calculePos(double[][] cout, int dim){	// TODO : commenter et optimiser
-		double[][] M = new double[dim][dim];
-		int i = 0;
-		int j = 0;
+		double[][] m = new double[dim][dim];
 		
-		for (i = 0; i < dim; i++){
-			for (j = 0; j < dim; j++)
-				M[i][j] = ((cout[0][j])*(cout[0][j]) + (cout[i][0])*(cout[i][0]) - (cout[i][j])*(cout[i][j]))*0.5;
+		for(int i = 0; i < dim; i++){
+			for(int j = 0; j < dim; j++)
+				m[i][j] = ((cout[0][j])*(cout[0][j]) + (cout[i][0])*(cout[i][0]) - (cout[i][j])*(cout[i][j]))/2;
 		}
 		
-		Matrix m = new Matrix(M);
-		EigenvalueDecomposition e = m.eig();
+		EigenvalueDecomposition e = (new Matrix(m)).eig();
 		Matrix U = e.getV();
 		Matrix S = e.getD();
 
 		int rankrow = S.getRowDimension();
 		int rankcol = S.getColumnDimension();
 		
-		for (i = 0; i < rankcol; i++){
-			for (j = 0; j < rankrow; j++){
+		for(int i = 0; i < rankcol; i++){
+			for(int j = 0; j < rankrow; j++){
 				double a = S.get(i, j);
 				a = Math.sqrt(a);
 				S.set(i, j, a);
@@ -51,8 +48,8 @@ public class Parseur {
 		
 		Matrix x = U.times(S);
 		double[][] pos = new double[dim][2];
-		for(i = 0; i < dim; i++){
-			for(j = 0; j < 2; j++)
+		for(int i = 0; i < dim; i++){
+			for(int j = 0; j < 2; j++)
 				pos[i][j] = x.get(i, dim-(2-j));
 		}
 		

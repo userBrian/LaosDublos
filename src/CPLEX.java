@@ -18,6 +18,11 @@ public class CPLEX {
 		
 	}
 	
+	/**
+	 * Resout un probleme du voyageur de commerce avec l'aide de cplex.
+	 * @param pb Le probleme a resoudre
+	 * @return La solution du probleme
+	 */
 	public SolutionPVC solveBrian(PLPVC pb){
 		int dim = pb.getDimension();
 		double[][] couts = pb.getFoncObj();
@@ -25,6 +30,7 @@ public class CPLEX {
 		
 		try{
 			modele = new IloCplex();
+			modele.setParam(IloCplex.IntParam.Threads, 8);
 			
 			// Variables
 			IloNumVar[][] x = new IloNumVar[dim][];
