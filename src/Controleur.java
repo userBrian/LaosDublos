@@ -22,11 +22,6 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileSystemView;
 
-import ilog.concert.IloException;
-import ilog.concert.IloLinearNumExpr;
-import ilog.concert.IloNumVar;
-import ilog.cplex.IloCplex;
-
 
 
 public class Controleur extends JFrame {
@@ -64,8 +59,6 @@ public class Controleur extends JFrame {
 		
 	//Panel affichage villes 
 	private PanelAffichageVilles panAffichageVilles = new PanelAffichageVilles();
-	
-	private JButton bouton = new JButton("Mon bouton");
 	
 	public Controleur() {
 		
@@ -208,14 +201,13 @@ public class Controleur extends JFrame {
 		
 		Controleur c = new Controleur();
 		List<double[][]> infos = new ArrayList<double[][]>();
-		infos = Parseur.parserXML(new File("a280.xml"));
-		//c.probleme = new PLPVC(infos.get(1));
+		//infos = Parseur.parserXML(new File("a280.xml"));
 		double[][] coor = {{10, 5}, {5, 10}, {15, 10}, {7, 20}, {13, 20}};
-		double[][] cout = {{0, 1, 2, 3, 4}, {1, 0, 3, 6, 2}, {2, 3, 0, 7, 8}, {3, 6, 7, 0, 1}, {4, 2, 8, 1, 0}};
+		double[][] cout = {{0, 1, 2, 3, 4, 2, 3, 1, 2}, {1, 0, 3, 6, 2, 8, 7, 2, 4}, {2, 3, 0, 7, 8, 7, 6, 3, 6}, {3, 6, 7, 0, 1, 5, 8, 4, 8}, {4, 2, 8, 1, 0, 1, 5, 5, 1}, {2, 8, 7, 5, 1, 0, 2, 6, 3}, {3, 7, 6, 8, 5, 2, 0, 7, 5}, {1, 2, 3, 4, 5, 6, 7, 0, 7}, {2, 4, 6, 8, 1, 3, 5, 7, 0}};
 		CPLEX cplex = new CPLEX();
-		c.probleme = new PLPVC(infos.get(1));
-		c.panAffichageVilles.getVilles(infos.get(0));
-		c.panAffichageVilles.affichageVilles();
+		c.probleme = new PLPVC(cout);
+		//c.panAffichageVilles.getVilles(infos.get(0));
+		//c.panAffichageVilles.affichageVilles();
 		cplex.solveBrian((PLPVC)c.probleme).printCycleSolution();
 		//c.panAffichageVilles.tracerSolution(cplex.solveBrian((PLPVC)c.probleme));
 	}
