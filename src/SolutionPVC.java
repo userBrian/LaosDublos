@@ -195,6 +195,22 @@ public class SolutionPVC extends Solution {
 		return cycleSolution;
 	}
 	
+	public int sousTours()
+	{
+		int nbr = 0;
+		for(int i = 0; i < cycleSolution.size(); i++)
+		{
+			for(int j = 0; j < cycleSolution.size(); j++)
+			{
+				if(cycleSolution.get(i).equals(cycleSolution.get(j)) && i != j)
+				{
+					nbr++;
+				}
+			}
+		}
+		return nbr;
+	}
+	
 	public ArrayList<Integer> genererInversion2Opt()
 	{
 		ArrayList<Integer> inversion = new ArrayList<Integer>();

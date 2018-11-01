@@ -47,15 +47,20 @@ public class PL {
 	
 	@Override
 	public String toString(){
-		String str = "Bonjour\n";
+		String str = "Fonction Objectif : \n";
 		
-		for(int i = 0; i < dimension; i++){
+		str += "\t Un bail";
+		/*for(int i = 0; i < dimension; i++){
 			for(int j = 0; j < dimension; j++)
 				str += foncObj[i][j] + " ";
 			str += '\n';
+		}*/
+		str += "\nContraintes : \n";
+		for(int i = 0; i < contraintes.size(); i++)
+		{
+			str += "\t"+contraintes.get(i).toString();
 		}
-			
-		
 		return str;
 	}
+
 }

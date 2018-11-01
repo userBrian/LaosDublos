@@ -9,14 +9,11 @@ public class CPLEX {
 
 	private IloCplex modele;
 	
-	/**
-	 * 
-	 */
-	public CPLEX(){
+	public CPLEX()
+	{
 		
 	}
-	
-	/*public CPLEX(PLPVC pb) {
+	public CPLEX(PLPVC pb) {
 		try{
 			modele = new IloCplex();
 			modele.setParam(IloCplex.IntParam.Threads, 8);
@@ -40,6 +37,7 @@ public class CPLEX {
 	}
 	
 	public SolutionPVC resoudre(){
+		return null;
 		
 	}
 	
@@ -59,15 +57,15 @@ public class CPLEX {
 			IloLinearNumExpr obj = modele.linearNumExpr();
 			for(int i = 0; i < dim; i++){
 				for(int j = 0; j < dim; j++){
-					if(i != j)
-						obj.addTerm(couts[i][j], x[i][j]);
+					if(i != j);
+						//obj.addTerm(couts[i][j], x[i][j]);
 				}
 			}
 			modele.addMinimize(obj);
 		} catch(IloException e){
 			e.printStackTrace();
 		};
-	}*/
+	}
 	
 	/**
 	 * Resout un probleme du voyageur de commerce avec l'aide de cplex.
@@ -116,7 +114,7 @@ public class CPLEX {
 				}
 				modele.addEq(expr, 1.0);
 			}
-			for(int i = 1; i < dim; i++){
+			/*for(int i = 1; i < dim; i++){
 				for(int j = 1; j < dim; j++){
 					if(i != j){
 						IloLinearNumExpr expr = modele.linearNumExpr();
@@ -126,7 +124,7 @@ public class CPLEX {
 						modele.addLe(expr, dim-2);
 					}
 				}
-			}
+			}*/
 			
 			// Resolution
 			modele.solve();

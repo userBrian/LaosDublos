@@ -7,6 +7,8 @@ class PanelAffichageVilles extends JPanel
 {
 	public ArrayList<Vec2d> villes = new ArrayList<Vec2d>();
 	
+	private int radius = 10;
+	
 	public void getVilles(double[][] pos)
 	{
 		for(double[] ville : pos)
@@ -53,21 +55,16 @@ class PanelAffichageVilles extends JPanel
 	{
 		for(int i = 0; i < villes.size(); i++)
 		{
-			this.getGraphics().fillOval((int)villes.get(i).x, (int)villes.get(i).y, 10, 10);
+			this.getGraphics().fillOval((int)villes.get(i).x - radius/2, (int)villes.get(i).y - radius/2, radius, radius);
 		}
 	}
 	
 	public void tracerSolution(SolutionPVC s)
 	{
-		for (int i = 0; i < s.getTaille(); i++) 
+		for(int i = 0; i < s.getCycleSolution().size() - 1; i++)
 		{
-			for (int j = 0; j < s.getTaille(); j++) 
-			{
-				if(s.getMatriceSolution()[i][j])
-				{
-					this.getGraphics().drawLine((int)villes.get(i).x, (int)villes.get(i).y, (int)villes.get(j).x, (int)villes.get(j).y);
-				}
-			}
+			this.getGraphics().drawLine((int)villes.get(s.getCycleSolution().get(i)).x, (int)villes.get(s.getCycleSolution().get(i)).y, (int)villes.get(s.getCycleSolution().get(i + 1)).x, (int)villes.get(s.getCycleSolution().get(i + 1)).y);
 		}
+
 	}
 }

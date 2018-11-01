@@ -30,6 +30,27 @@ public class Equation {
 	public float getSecondMembre() {
 		return secondMembre;
 	}
+	
+	@Override
+	public String toString() {
+		String str = "";
+		for(int i = 0; i < coefficients.length; i++)
+		{
+			if(coefficients[i] != 0)
+			{
+				if(str != "")
+				{
+					str += "+" + coefficients[i] + "x" + i + " ";
+				}
+				else
+				{
+					str += coefficients[i] + "x" + i + " ";
+				}
+			}
+		}
+		str += " " + signe + " " + secondMembre;
+		return str;
+	}
 
 	
 }
