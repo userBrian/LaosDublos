@@ -8,7 +8,8 @@ import ilog.cplex.IloCplex;
 public class CPLEX {
 
 	private IloCplex modele;
-	
+	private IloNumVar[][] x;
+	private int dim;
 	public CPLEX()
 	{
 		
@@ -37,8 +38,33 @@ public class CPLEX {
 	}
 	
 	public SolutionPVC resoudre(){
-		return null;
-		
+		boolean sol[][] = new boolean[dim][dim];
+		try {
+			
+		// Resolution
+		modele.solve();
+
+		// Recuperation de la solution
+		for(int i = 0; i < dim; i++)
+		{
+			for(int j = 0; j < dim; j++)
+			{
+				if(i != j && modele.getValue(x[i][j]) == 1)
+				{
+					sol[i][j] = true;
+				}
+				else
+				{
+					sol[i][j] = false;
+				}
+			}
+		}
+
+		} catch(IloException e){
+			e.printStackTrace();
+		}
+				
+		return new SolutionPVC(sol);	
 	}
 	
 	public void declarerVariables(int dim){
@@ -73,16 +99,15 @@ public class CPLEX {
 	 * @return La solution du probleme
 	 */
 	public SolutionPVC solveBrian(PLPVC pb){
-		int dim = pb.getDimension();
+		dim = pb.getDimension();
 		double[][] couts = pb.getFoncObj();
-		ArrayList<Integer> sol = new ArrayList<Integer>();
 		
 		try{
 			modele = new IloCplex();
 			modele.setParam(IloCplex.IntParam.Threads, 8);
 			
 			// Variables
-			IloNumVar[][] x = new IloNumVar[dim][];
+			x = new IloNumVar[dim][];
 			for(int i = 0; i < dim; i++)
 				x[i] = modele.boolVarArray(dim);
 			IloNumVar[] u = modele.numVarArray(dim, 0, Double.MAX_VALUE);
@@ -114,35 +139,37 @@ public class CPLEX {
 				}
 				modele.addEq(expr, 1.0);
 			}
-			/*for(int i = 1; i < dim; i++){
-				for(int j = 1; j < dim; j++){
-					if(i != j){
-						IloLinearNumExpr expr = modele.linearNumExpr();
-						expr.addTerm(1.0, u[i]);
-						expr.addTerm(-1.0, u[j]);
-						expr.addTerm(dim-1, x[i][j]);
-						modele.addLe(expr, dim-2);
-					}
-				}
-			}*/
-			
-			// Resolution
-			modele.solve();
 
-			// Recuperation de la solution
-			for(int i = 0; i < dim; i++){
-				for(int j = 0; j < dim; j++){
-					if(i != j && modele.getValue(x[i][j]) == 1)
-						sol.add(j);
-				}
-			}
-			
-			modele.end();
 		} catch(IloException e){
 			e.printStackTrace();
 		}
 		
-		return new SolutionPVC(sol);
+		return resoudre();
+	}
+	
+	public void ajoutContrainteSousTours(ArrayList<Integer> cycle)
+	{
+		try {
+			
+		int secondMembre = cycle.size() - 1;
+
+		IloLinearNumExpr expr = modele.linearNumExpr();
+		
+			for(int i = 0; i < cycle.size(); i++)
+			{
+				 for(int j=0; j < cycle.size(); j++)
+				 {
+					 	if(i!=j)
+					 	{
+							expr.addTerm(1.0,x[cycle.get(i)][cycle.get(j)]);
+					 	}	
+				 }
+			}
+			modele.addLe(expr, secondMembre);
+			
+		} catch (IloException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

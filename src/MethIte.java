@@ -1,20 +1,39 @@
+import java.util.ArrayList;
 
-public class MethIte {
-
-	public MethIte() {
+public class MethIte
+{
+	private CPLEX cplex;
+	
+	public MethIte() 
+	{
 		// TODO Auto-generated constructor stub
 	}
+	
+	public SolutionPVC resolutionProbleme(PLPVC pb)
+	{
+		//Instancier CPLEX
+		cplex = new CPLEX();
+		
+		SolutionPVC sol = cplex.solveBrian(pb);
 
-	/*public boolean sousTours(SolutionPVC s){
-		int nbArcs = 0;
-		for(int i = 0; i < s.getTaille(); i++){
-			for(int j = 0; j < s.getTaille(); j++){
-				if()
-			}
-			nbArcs = 0;
+		//Lancer la résolution par CPLEX du PLPVC en rajoutant les contrainets de sous tours
+		while(!sol.contrainteSousToursSatisfaite())
+		{
+			ajoutContraintesSousTours(sol);
+			sol =  cplex.resoudre();
 		}
 		
-		return false;
-	}*/
+		return sol;
+	}
+
+	public void ajoutContraintesSousTours(SolutionPVC s)
+	{
+		ArrayList<ArrayList<Integer>> sousTours = s.getSousTours();
+		
+		for(int i = 0; i < sousTours.size(); i++)
+		{
+			cplex.ajoutContrainteSousTours(sousTours.get(i));
+		}
+	}
 	
 }

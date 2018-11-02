@@ -1,3 +1,4 @@
+import java.awt.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -34,8 +35,6 @@ public class SolutionPVC extends Solution {
 		}
 	}
 	
-	
-	
 	public SolutionPVC(Solution sol)
 	{
 		super(sol.getTaille());
@@ -46,13 +45,16 @@ public class SolutionPVC extends Solution {
 	public SolutionPVC(ArrayList<Integer> cycle)
 	{
 		super(cycle.size()-1);
+		String str = "";
+		for(Integer i : cycle)
+		{
+			str += i + " ";
+		}
+		System.out.println(str);
 		//setAll(cycle);
 		this.cycleSolution = cycle;
 	}
-	
-	/*
-	 * Celui la sert pour les tests
-	 */
+
 	public SolutionPVC(boolean matriceSolution[][])
 	{
 		super(matriceSolution.length);
@@ -63,7 +65,6 @@ public class SolutionPVC extends Solution {
 	public void remplirMatriceSolution(int resultat[])
 	{
 		int tailleMatrice = getTaille();
-		matriceSolution = new boolean[tailleMatrice][tailleMatrice];
 		
 		for (int i = 0; i < resultat.length; i++)
 		{
@@ -158,6 +159,7 @@ public class SolutionPVC extends Solution {
 	 */
 	boolean contrainteSousToursSatisfaite()
 	{
+				
 		int villeActuelle = 0;
 		int compte = 0;
 		
@@ -193,22 +195,6 @@ public class SolutionPVC extends Solution {
 
 	public ArrayList<Integer> getCycleSolution() {
 		return cycleSolution;
-	}
-	
-	public int sousTours()
-	{
-		int nbr = 0;
-		for(int i = 0; i < cycleSolution.size(); i++)
-		{
-			for(int j = 0; j < cycleSolution.size(); j++)
-			{
-				if(cycleSolution.get(i).equals(cycleSolution.get(j)) && i != j)
-				{
-					nbr++;
-				}
-			}
-		}
-		return nbr;
 	}
 	
 	public ArrayList<Integer> genererInversion2Opt()
@@ -249,7 +235,7 @@ public class SolutionPVC extends Solution {
 	public void setAll(ArrayList<Integer> cycle)
 	{
 		cycleSolution = cycle;
-		
+		System.out.println(taille);
 		matriceSolution = new boolean[taille][taille];
 		for(int i = 0; i < taille; i++){
 			for(int j = 0; j < taille; j++)
@@ -264,6 +250,41 @@ public class SolutionPVC extends Solution {
 		}
 		
 		setResultat(matriceSolution);
+	}
+
+	public ArrayList<ArrayList<Integer>> getSousTours() 
+	{
+		ArrayList<ArrayList<Integer>> sousTours = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> villesRestantes = new ArrayList<Integer>();
+		int nbVilles = 0;
+		
+		for(int i = 0; i < taille; i++)
+		{
+			villesRestantes.add(i);
+		}
+		while(villesRestantes.size() > 0)
+		{
+			ArrayList<Integer> tmp = new ArrayList<Integer>();
+			int premiereVille = villesRestantes.get(0);
+			int n = villesRestantes.get(0);
+			do
+			{
+				for(int i = 0; i < taille; i++)
+				{
+					if(matriceSolution[n][i])
+					{
+						tmp.add(n);
+						villesRestantes.remove((Integer)i);
+						n = i;
+						nbVilles++;
+						break;
+					}
+				}
+			}
+			while(n != premiereVille);
+			sousTours.add(tmp);
+		}
+		return sousTours;
 	}
 	
 }
