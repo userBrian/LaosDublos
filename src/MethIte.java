@@ -22,7 +22,7 @@ public class MethIte
 			ajoutContraintesSousTours(sol);
 			sol =  cplex.resoudre();
 		}
-		
+		System.out.println("bite");
 		return sol;
 	}
 

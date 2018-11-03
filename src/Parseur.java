@@ -121,11 +121,6 @@ public class Parseur {
 			e.printStackTrace();
 		};
 		
-		for(int k = 0; k< dim; k++){
-			for(int j = 0; j < 2; j++)
-				System.out.println(pos[k][j]);
-		}
-		
 		// Calcul des distances
 		cout = new double[dim][dim];
 		cout = calculDistance(pos, dim);
@@ -177,8 +172,6 @@ public class Parseur {
 	
 	public static List<double[][]> parserXML2(File f){
 		List<double[][]> infos = new ArrayList<double[][]>();
-		String dim = "";
-		int i = 0;
 		
 		try {
 	         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -247,7 +240,10 @@ class TestSAX2Handler extends DefaultHandler
 	         bFirstName = false;
 	      } else if (bLastName) {
 	    	  j = Integer.parseInt(new String(ch, start, length));
-	    	  c[i][j] = Double.parseDouble(temp);
+	    	  if(i != j)
+	    		  c[i][j] = Double.parseDouble(temp);
+	    	  else
+	    		  c[i][j] = 0;
 	         bLastName = false;
 	      } else if(name){
 	    	  String temp = new String(ch, start, length);
