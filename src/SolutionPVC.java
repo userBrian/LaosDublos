@@ -10,13 +10,15 @@ import java.util.concurrent.ThreadLocalRandom;
  * du PVC sur la solution
  */
 public class SolutionPVC extends Solution {
+	
+	int nbVilles;
 
 	/**
 	 * Representation matricielle de la solution. Dans cette matrice, la case ij represente
 	 * l'arc allant de la ville i a la ville j. Si la case vaut true alors l'arc a ete choisi dans la solution, sinon
 	 * la case vaudra false.
 	 */
-	private boolean matriceSolution[][];
+	private int matriceSolution[][];
 	
 	/*
 	 * Representation de la solution sous forme d'une liste d'identifiant 
@@ -26,48 +28,51 @@ public class SolutionPVC extends Solution {
 	 */
 	private ArrayList<Integer> cycleSolution;
 	
-	public SolutionPVC(int taille, PLPVC pb) {
-		super(taille, pb);
-		matriceSolution = new boolean[taille][taille];
-		for(int i = 0; i < taille; i++){
-			for(int j = 0; j < taille; j++)
-				matriceSolution[i][j] = false;
+	public SolutionPVC(int nbVilles) {
+		super(nbVilles*nbVilles);
+		this.nbVilles = nbVilles;
+		matriceSolution = new int[nbVilles][nbVilles];
+		for(int i = 0; i < nbVilles; i++){
+			for(int j = 0; j < nbVilles; j++)
+				matriceSolution[i][j] = 0;
 		}
 	}
 	
 	
 	
-	public SolutionPVC(Solution sol, PLPVC pb)
+	public SolutionPVC(Solution sol)
 	{
-		super(sol.getTaille(), pb);
+		super(sol.getTaille());
+		nbVilles = (int) Math.sqrt(taille);
 		remplirMatriceSolution(sol.getResultat());
 		remplirCycleSolution();
 	}
 	
 	public SolutionPVC(ArrayList<Integer> cycle)
 	{
-		super(cycle.size()-1);
+		super((cycle.size()-1)*(cycle.size()-1));
+		nbVilles = cycle.size() - 1;
 		setAll(cycle);
 	}
 	
 	/*
 	 * Celui la sert pour les tests
 	 */
-	public SolutionPVC(boolean matriceSolution[][])
+	public SolutionPVC(int matriceSolution[][])
 	{
-		super(matriceSolution.length);
+		super(matriceSolution.length*matriceSolution.length);
+		nbVilles  = matriceSolution.length;
 		this.matriceSolution = matriceSolution;
 		remplirCycleSolution();
 	}
 	
 	public void remplirMatriceSolution(float[] fs)
 	{
-		int tailleMatrice = getTaille();
-		matriceSolution = new boolean[tailleMatrice][tailleMatrice];
+		matriceSolution = new int[nbVilles][nbVilles];
 		
 		for (int i = 0; i < fs.length; i++)
 		{
-			matriceSolution[i%tailleMatrice][i/tailleMatrice] = fs[i] == 1 ? true : false;
+			matriceSolution[i%nbVilles][i/nbVilles] = (int) fs[i];
 		}
 	}
 	
@@ -80,7 +85,7 @@ public class SolutionPVC extends Solution {
 		do
 		{
 			for (int i = 0; i < getTaille(); i++) {
-				if (matriceSolution[villeActuelle][i])
+				if (matriceSolution[villeActuelle][i] == 1)
 				{
 					villeActuelle = i; 
 					break;
@@ -101,7 +106,7 @@ public class SolutionPVC extends Solution {
 		System.out.println(str);
 	}
 
-	public boolean[][] getMatriceSolution() {
+	public int[][] getMatriceSolution() {
 		return matriceSolution;
 	}
 	
@@ -119,7 +124,7 @@ public class SolutionPVC extends Solution {
 		{
 			count = 0;
 			for (int j = 0; j < getTaille(); j++) {
-				if (matriceSolution[i][j]) count++;
+				if (matriceSolution[i][j] == 1) count++;
 			}
 			if (count != 1) return false;
 		}
@@ -128,7 +133,7 @@ public class SolutionPVC extends Solution {
 		for (int j = 0; j < getTaille(); j++) {
 			count = 0;
 			for (int i = 0; i < getTaille(); i++) {
-				if (matriceSolution[i][j]) count++;
+				if (matriceSolution[i][j] == 1) count++;
 			}
 			if (count != 1) return false;
 		}
@@ -145,7 +150,7 @@ public class SolutionPVC extends Solution {
 	 */
 	boolean valeursVariablesValides()
 	{
-		for (int variable : getResultat()) {
+		for (double variable : getResultat()) {
 			if (variable != 0 && variable != 1) return false;
 		}
 		return true;
@@ -164,7 +169,7 @@ public class SolutionPVC extends Solution {
 		do
 		{
 			for (int i = 0; i < getTaille(); i++) {
-				if (matriceSolution[villeActuelle][i])
+				if (matriceSolution[villeActuelle][i] == 1)
 				{
 					villeActuelle = i; 
 					break;
@@ -188,7 +193,7 @@ public class SolutionPVC extends Solution {
 	}
 	
 	public void setTrue(int x, int y){
-		matriceSolution[x][y] = true;
+		matriceSolution[x][y] = 1;
 	}
 
 	public ArrayList<Integer> getCycleSolution() {
@@ -220,11 +225,11 @@ public class SolutionPVC extends Solution {
 		return inversion;
 	}
 	
-	public void setResultat(boolean matSol[][])
+	public void setResultat(int[][] matriceSolution2)
 	{
-		for (int j = 0; j < matSol.length; j++) {
-			for (int i = 0; i < matSol.length; i++) {
-				getResultat()[i + j*this.getTaille()] = matSol[i][j] ? 1 : 0;
+		for (int j = 0; j < matriceSolution2.length; j++) {
+			for (int i = 0; i < matriceSolution2.length; i++) {
+				getResultat()[i + j*this.getTaille()] = matriceSolution2[i][j];
 				//TODO est-ce que ça marche ça ?
 			}
 		}
@@ -234,10 +239,10 @@ public class SolutionPVC extends Solution {
 	{
 		cycleSolution = cycle;
 		
-		matriceSolution = new boolean[taille][taille];
+		matriceSolution = new int[nbVilles][nbVilles];
 		for(int i = 0; i < taille; i++){
 			for(int j = 0; j < taille; j++)
-				matriceSolution[i][j] = false;
+				matriceSolution[i][j] = 0;
 		}
 		
 		System.out.println("cycle size " + cycle.size());

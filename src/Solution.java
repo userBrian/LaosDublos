@@ -5,21 +5,9 @@ public class Solution {
 	protected int taille; //nb de variables de la solution 
 	protected PL probleme;
 
-	public Solution(int taille, PL pb) {
+	public Solution(int taille) {
 		this.taille = taille;
 		resultat = new float[this.taille];
-		probleme = pb;
-	}
-
-	public double getCout(){
-		// TODO pour ça il faut connaitre le probleme associé 
-		double cout = 0;
-		
-		for (int i = 0; i < resultat.length; i++) {
-			cout += resultat[i]*probleme.getFoncObj()[i];
-		}
-		
-		return cout;
 	}
 	
 	

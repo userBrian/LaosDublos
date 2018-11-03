@@ -7,12 +7,23 @@ public abstract class Recuit {
     protected Solution solutionActuelle;
     protected double temperature;
     protected PL probleme;
-    protected int deltaCout;
+    protected double coutActuel;
+    protected double deltaCout;
 
+    public double getCout(Solution sol, PL pb)
+    {
+    	double cout = 0;
+    	
+    	for (int i = 0; i < pb.getDimension(); i++) {
+			cout += pb.getFoncObj()[i]*sol.getResultat()[i];
+		}
+    	
+    	return cout;
+    }
 	
 	public Recuit(PL prob) {
 		probleme = prob;
-		temperature = 10000;
+		temperature = 1000;
 	}
 	
 	protected abstract void initialiserTemp();
@@ -20,7 +31,7 @@ public abstract class Recuit {
 	protected boolean accepterSolution(Solution solConsideree)
 	{
 				
-		deltaCout = solConsideree.getCout() - solutionActuelle.getCout();
+		deltaCout = getCout(solConsideree, probleme) - getCout(solutionActuelle, probleme);
 		
 		if(deltaCout < 0) return true;
 		else return (Math.random() < Math.exp(deltaCout/temperature));
@@ -37,10 +48,11 @@ public abstract class Recuit {
 				
 				if (accepterSolution(x))
 				{
+					coutActuel = getCout(solutionActuelle, probleme);
 					setSolutionActuelle(x);
-					if (getSolutionActuelle().getCout() < getMeilleurCout())
+					if (coutActuel < getMeilleurCout())
 					{
-						setMeilleurCout(getSolutionActuelle().getCout());
+						setMeilleurCout(coutActuel);
 						setMeilleureSolution(getSolutionActuelle());
 					}
 					nbIterations++;

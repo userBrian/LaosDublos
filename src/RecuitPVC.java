@@ -75,18 +75,19 @@ public class RecuitPVC extends Recuit {
 	@Override
 	protected SolutionPVC solutionInitiale(){
 		SolutionPVC solInit = new SolutionPVC(probleme.getDimension());
-		double[][] couts = probleme.getFoncObj();
+		PLPVC pb = (PLPVC) probleme;
+		double[][] couts = pb.matObj;
 		double min = Double.MAX_VALUE;
 		int index = 0, nbIte = 0, i = 0;
-		while(nbIte < probleme.getDimension()){
+		while(nbIte < pb.getDimension()){
 			System.out.print(i +"->");
-			for(int j = 0; j < probleme.getDimension(); j++){
+			for(int j = 0; j < pb.nbVilles; j++){
 				if(couts[i][j] != 0 && couts[i][j] < min){
 					min = couts[i][j];
 					index = j;
 				}
 			}
-			for(int j = 0; j < probleme.getDimension(); j++)
+			for(int j = 0; j < pb.nbVilles; j++)
 				couts[j][i] = Double.MAX_VALUE;
 			min = Double.MAX_VALUE;
 			System.out.println(index);
@@ -97,6 +98,19 @@ public class RecuitPVC extends Recuit {
 			
 		}
 		return solInit;
+	}
+	
+	
+	public double getCout(SolutionPVC sol, PLPVC pb)
+	{
+		double cout = 0;
+		
+		for (int i = 0; i < pb.nbVilles; i++) {
+			for (int j = 0; j < pb.nbVilles; j++) {
+				if(i!=j) cout += sol.getMatriceSolution()[i][j]*pb.matObj[i][j];
+			}
+		}
+		return cout;
 	}
 
 }
