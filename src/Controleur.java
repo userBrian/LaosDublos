@@ -214,11 +214,13 @@ public class Controleur extends JFrame {
 		c.probleme = new PLPVC(c.infos.get(1));
 		c.panAffichageVilles.getVilles(c.infos.get(0));
 		c.panAffichageVilles.affichageVilles();
+
 		/*MethIte ite = new MethIte();
 		SolutionPVC s = ite.resolutionProbleme((PLPVC)c.probleme);
 		s.printCycleSolution();
 		System.out.println(s.contrainteSousToursSatisfaite());
 		c.panAffichageVilles.tracerSolution(s);*/
+
 		/*double[][] coor = {{10, 5}, {5, 10}, {15, 10}, {7, 20}, {13, 20}};
 		double[][] cout = {{0, 1, 2, 3, 4, 2, 3, 1, 2}, {1, 0, 3, 6, 2, 8, 7, 2, 4}, {2, 3, 0, 7, 8, 7, 6, 3, 6}, {3, 6, 7, 0, 1, 5, 8, 4, 8}, {4, 2, 8, 1, 0, 1, 5, 5, 1}, {2, 8, 7, 5, 1, 0, 2, 6, 3}, {3, 7, 6, 8, 5, 2, 0, 7, 5}, {1, 2, 3, 4, 5, 6, 7, 0, 7}, {2, 4, 6, 8, 1, 3, 5, 7, 0}};
 		MethIte ite = new MethIte();

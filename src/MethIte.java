@@ -4,25 +4,19 @@ public class MethIte
 {
 	private CPLEX cplex;
 	
-	public MethIte() 
-	{
-		// TODO Auto-generated constructor stub
-	}
-	
 	public SolutionPVC resolutionProbleme(PLPVC pb)
 	{
 		//Instancier CPLEX
 		cplex = new CPLEX();
 		
-		SolutionPVC sol = cplex.solveBrian(pb);
+		SolutionPVC sol = cplex.solvePVC(pb);
 
-		//Lancer la résolution par CPLEX du PLPVC en rajoutant les contrainets de sous tours
+		//Lancer la résolution par CPLEX du PLPVC en rajoutant les contraintes de sous tours
 		while(!sol.contrainteSousToursSatisfaite())
 		{
 			ajoutContraintesSousTours(sol);
 			sol =  cplex.resoudre();
 		}
-		System.out.println("bite");
 		return sol;
 	}
 
