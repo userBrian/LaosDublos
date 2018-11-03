@@ -10,20 +10,12 @@ public class CPLEX {
 	private IloCplex modele;
 	private IloNumVar[][] x;
 	private int dim;
+	
 	public CPLEX()
 	{
 		
 	}
-	public CPLEX(PLPVC pb) {
-		try{
-			modele = new IloCplex();
-			modele.setParam(IloCplex.IntParam.Threads, 8);
-		
-			initialiserModele(pb);
-		} catch(IloException e){
-			e.printStackTrace();
-		};
-	}
+	
 	
 	public void initialiserModele(PLPVC pb){
 		int dim = pb.getDimension();
@@ -31,10 +23,31 @@ public class CPLEX {
 		
 		declarerVariables(dim);
 		declarerFoncObj(dim, couts);
+		ajouterContraintes();
 	}
 	
-	public void ajouterContraintes(){
-		
+	public void ajouterContraintes()
+	{
+		try{
+			for(int j = 0; j < dim; j++){
+				IloLinearNumExpr expr = modele.linearNumExpr();
+				for(int i = 0; i < dim; i++){
+					if(i != j)
+						expr.addTerm(1.0, x[i][j]);
+				}
+				modele.addEq(expr, 1.0);
+			}
+			for(int i = 0; i < dim; i++){
+				IloLinearNumExpr expr = modele.linearNumExpr();
+				for(int j = 0; j < dim; j++){
+					if(i != j)
+						expr.addTerm(1.0, x[i][j]);
+				}
+				modele.addEq(expr, 1.0);
+			}
+		} catch(IloException e){
+			e.printStackTrace();
+		};
 	}
 	
 	public SolutionPVC resoudre(){
@@ -69,7 +82,7 @@ public class CPLEX {
 	
 	public void declarerVariables(int dim){
 		try{
-			IloNumVar[][] x = new IloNumVar[dim][];
+			x = new IloNumVar[dim][];
 			for(int i = 0; i < dim; i++)
 				x[i] = modele.boolVarArray(dim);
 			IloNumVar[] u = modele.numVarArray(dim, 0, Double.MAX_VALUE);
@@ -84,7 +97,7 @@ public class CPLEX {
 			for(int i = 0; i < dim; i++){
 				for(int j = 0; j < dim; j++){
 					if(i != j);
-						//obj.addTerm(couts[i][j], x[i][j]);
+						obj.addTerm(couts[i][j], x[i][j]);
 				}
 			}
 			modele.addMinimize(obj);
@@ -98,7 +111,7 @@ public class CPLEX {
 	 * @param pb Le probleme a resoudre
 	 * @return La solution du probleme
 	 */
-	public SolutionPVC solveBrian(PLPVC pb){
+	public SolutionPVC solvePVC(PLPVC pb){
 		dim = pb.getDimension();
 		double[][] couts = pb.getFoncObj();
 		
