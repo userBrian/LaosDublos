@@ -3,15 +3,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
@@ -23,21 +29,23 @@ public class Parseur {
 	 * @param dim Taille du probleme
 	 * @return Tableau de coordonnees [dim][2], chaque ligne correspondant a une ville
 	 */
-	private static double[][] calculePos(double[][] cout, int dim){	// TODO : commenter et optimiser
+	private static double[][] calculePos(double[][] cout, int dim){
 		double[][] m = new double[dim][dim];
-		
+		System.out.println("Calcul M");
 		for(int i = 0; i < dim; i++){
 			for(int j = 0; j < dim; j++)
 				m[i][j] = ((cout[0][j])*(cout[0][j]) + (cout[i][0])*(cout[i][0]) - (cout[i][j])*(cout[i][j]))/2;
 		}
-		
+		System.out.println("Décomposition");
+		// Decomposition de la matrice
 		EigenvalueDecomposition e = (new Matrix(m)).eig();
 		Matrix U = e.getV();
 		Matrix S = e.getD();
 
 		int rankrow = S.getRowDimension();
 		int rankcol = S.getColumnDimension();
-		
+		System.out.println("Calcul racine");
+		// Calcul de la racine des valeurs propres
 		for(int i = 0; i < rankcol; i++){
 			for(int j = 0; j < rankrow; j++){
 				double a = S.get(i, j);
@@ -45,7 +53,8 @@ public class Parseur {
 				S.set(i, j, a);
 			}
 		}
-		
+		System.out.println("Solution");
+		// Remplissage du tableau des solutions
 		Matrix x = U.times(S);
 		double[][] pos = new double[dim][2];
 		for(int i = 0; i < dim; i++){
@@ -63,7 +72,7 @@ public class Parseur {
 	 * @return Matrice [dim][dim] contenant les distances entre chaque ville
 	 */
 	private static double[][] calculDistance(double[][] pos, int dim){
-		double[][] cout = new double[dim][2];
+		double[][] cout = new double[dim][dim];
 		for(int i = 0; i < dim; i++){
 			for(int j = 0; j < dim; j++)
 				cout[i][j] = Math.sqrt(Math.abs(pos[i][0]-pos[j][0])*Math.abs(pos[i][0]-pos[j][0]) + Math.abs(pos[i][1]-pos[j][1])*Math.abs(pos[i][1]-pos[j][1]));
@@ -90,7 +99,7 @@ public class Parseur {
 				br.readLine();
 			
 			// Dimension du problème
-			dim = Integer.parseInt(br.readLine().substring(11));
+			dim = Integer.parseInt(removeBlanks(br.readLine().split(":")[1]));
 			pos = new double[dim][2];
 			
 			// Saut de lignes
@@ -102,8 +111,8 @@ public class Parseur {
 				line = br.readLine();
 				if(line.charAt(0) == 'E' && line.charAt(1) == 'O' && line.charAt(2) == 'F')
 					break;
-				pos[i][0] = Integer.parseInt(removeBlanks(line).split("\\s+")[1]);
-				pos[i][1] = Integer.parseInt(removeBlanks(line).split("\\s+")[2]);
+				pos[i][0] = Double.parseDouble(removeBlanks(line).split("\\s+")[1]);
+				pos[i][1] = Double.parseDouble(removeBlanks(line).split("\\s+")[2]);
 				i++;
 			}
 
@@ -111,6 +120,11 @@ public class Parseur {
 		} catch(IOException e){
 			e.printStackTrace();
 		};
+		
+		for(int k = 0; k< dim; k++){
+			for(int j = 0; j < 2; j++)
+				System.out.println(pos[k][j]);
+		}
 		
 		// Calcul des distances
 		cout = new double[dim][dim];
@@ -152,13 +166,34 @@ public class Parseur {
 		} catch(Exception e){
 			e.printStackTrace();
 		};
-		
+
 		pos = calculePos(cout, dim);
 		infos.add(pos);
 		infos.add(cout);
 		
 		return infos;
 				
+	}
+	
+	public static List<double[][]> parserXML2(File f){
+		List<double[][]> infos = new ArrayList<double[][]>();
+		try {
+	         File inputFile = f;
+	         SAXParserFactory factory = SAXParserFactory.newInstance();
+	         SAXParser saxParser = factory.newSAXParser();
+	         TestSAX2Handler userhandler = new TestSAX2Handler();
+	         saxParser.parse(inputFile, userhandler);    
+	        /* for(int i = 0; i < 280; i++){
+	        	 System.out.println(userhandler.c[1][i]);
+	         }*/
+	         System.out.println("CalculePos");
+	         infos.add(calculePos(userhandler.c, userhandler.c.length));
+	         
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+		
+		return infos;
 	}
 	
 	/**
@@ -171,4 +206,48 @@ public class Parseur {
 			str = str.substring(1);
 		return str;
 	}
+}
+
+class TestSAX2Handler extends DefaultHandler
+{
+		boolean bFirstName = false;
+	   boolean bLastName = false;
+	   boolean bNickName = false;
+	   boolean bMarks = false;
+	   public double[][] c = new double[3795][3795];
+	   int i = 0, j = 0;
+	   String temp;
+
+	   @Override
+	   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+	      
+	      if (qName.equalsIgnoreCase("vertex")) {
+	         bFirstName = true;
+	      } else if (qName.equalsIgnoreCase("edge")) {
+	    	 temp = attributes.getValue("cost");
+	         bLastName = true;
+	      }
+	   }
+
+	   @Override
+	   public void endElement(String uri, 
+	      String localName, String qName) throws SAXException {
+	      
+	      if (qName.equalsIgnoreCase("vertex")) {
+	    	  i+=1;
+	    	  System.out.println(i);
+	      }
+	   }
+
+	   @Override
+	   public void characters(char ch[], int start, int length) throws SAXException {
+
+	      if (bFirstName) {
+	         bFirstName = false;
+	      } else if (bLastName) {
+	    	  j = Integer.parseInt(new String(ch, start, length));
+	    	  c[i][j] = Double.parseDouble(temp);
+	         bLastName = false;
+	      }
+	   }
 }

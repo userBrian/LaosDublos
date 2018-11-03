@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,38 +204,18 @@ public class Controleur extends JFrame {
 	
 		
 	public static void main(String[] args) {
-		/*File f = new File("a280.tsp");
-		try{
-			List<double[][]> infos = Parseur.parserTSP(new FileReader(f));
-			probleme = new PLPVC(infos.get(1));
-			fenetre.affichageVilles(infos.get(0));
-			System.out.println(probleme.toString());
-		} catch(FileNotFoundException e){
-		}*/
-		
-		/*Controleur c = new Controleur();
-		List<double[][]> infos = new ArrayList<double[][]>();
-		infos = Parseur.parserXML(new File("a280.xml"));
-		c.probleme = new PLPVC(infos.get(1));
-		RecuitPVC r = new RecuitPVC((PLPVC)c.probleme);
-		System.out.println("Go !");
-		SolutionPVC sol = r.solutionInitiale();
-		for(int i = 0; i < 280; i++){
-			for(int j = 0; j < 280; j++)
-				System.out.println(sol.getMatriceSolution()[i][j]);
-			System.out.println("\n");
-		}
-		
-		System.out.println(infos.get(0)[1][0]);
-		c.panAffichageVilles.getVilles(infos.get(0));
-		c.panAffichageVilles.affichageVilles();
-		c.panAffichageVilles.tracerSolution(sol);*/
 		
 		Controleur c = new Controleur();
-		c.infos = Parseur.parserXML(new File("a280.xml"));
-		double[][] coor = {{10, 5}, {5, 10}, {15, 10}, {7, 20}, {13, 20}};
+		try{
+			c.infos = Parseur.parserXML2(new File("fl3795.xml"));
+		} catch(Exception e){
+			e.printStackTrace();
+		};
+		System.out.println("Done 2");
+		c.panAffichageVilles.getVilles(c.infos.get(0));
+		c.panAffichageVilles.affichageVilles();
+		/*double[][] coor = {{10, 5}, {5, 10}, {15, 10}, {7, 20}, {13, 20}};
 		double[][] cout = {{0, 1, 2, 3, 4, 2, 3, 1, 2}, {1, 0, 3, 6, 2, 8, 7, 2, 4}, {2, 3, 0, 7, 8, 7, 6, 3, 6}, {3, 6, 7, 0, 1, 5, 8, 4, 8}, {4, 2, 8, 1, 0, 1, 5, 5, 1}, {2, 8, 7, 5, 1, 0, 2, 6, 3}, {3, 7, 6, 8, 5, 2, 0, 7, 5}, {1, 2, 3, 4, 5, 6, 7, 0, 7}, {2, 4, 6, 8, 1, 3, 5, 7, 0}};
-		//CPLEX cplex = new CPLEX();
 		MethIte ite = new MethIte();
 		c.probleme = new PLPVC(c.infos.get(1));
 		
@@ -243,7 +225,7 @@ public class Controleur extends JFrame {
 		s.printCycleSolution();
 
 		System.out.println(s.contrainteSousToursSatisfaite());
-		c.panAffichageVilles.tracerSolution(s);
+		c.panAffichageVilles.tracerSolution(s);*/
 		//c.panAffichageVilles.tracerSolution(cplex.solveBrian((PLPVC)c.probleme));
 	}
 
