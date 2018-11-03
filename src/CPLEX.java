@@ -156,7 +156,6 @@ public class CPLEX {
 		} catch(IloException e){
 			e.printStackTrace();
 		}
-		
 		return resoudre();
 	}
 	

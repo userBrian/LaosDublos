@@ -17,8 +17,7 @@ public class MethIte
 			ajoutContraintesSousTours(sol);
 			sol =  cplex.resoudre();
 		}
-		
-		sol.printCycleSolution();
+
 		return sol;
 	}
 

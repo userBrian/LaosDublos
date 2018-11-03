@@ -177,18 +177,17 @@ public class Parseur {
 	
 	public static List<double[][]> parserXML2(File f){
 		List<double[][]> infos = new ArrayList<double[][]>();
+		String dim = "";
+		int i = 0;
+		
 		try {
-	         File inputFile = f;
 	         SAXParserFactory factory = SAXParserFactory.newInstance();
 	         SAXParser saxParser = factory.newSAXParser();
 	         TestSAX2Handler userhandler = new TestSAX2Handler();
-	         saxParser.parse(inputFile, userhandler);    
-	        /* for(int i = 0; i < 280; i++){
-	        	 System.out.println(userhandler.c[1][i]);
-	         }*/
+	         saxParser.parse(f, userhandler);
 	         System.out.println("CalculePos");
 	         infos.add(calculePos(userhandler.c, userhandler.c.length));
-	         
+	         infos.add(userhandler.c);
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
@@ -212,9 +211,9 @@ class TestSAX2Handler extends DefaultHandler
 {
 		boolean bFirstName = false;
 	   boolean bLastName = false;
-	   boolean bNickName = false;
+	   boolean name = false;
 	   boolean bMarks = false;
-	   public double[][] c = new double[3795][3795];
+	   public double[][] c;
 	   int i = 0, j = 0;
 	   String temp;
 
@@ -226,6 +225,8 @@ class TestSAX2Handler extends DefaultHandler
 	      } else if (qName.equalsIgnoreCase("edge")) {
 	    	 temp = attributes.getValue("cost");
 	         bLastName = true;
+	      } else if(qName.equalsIgnoreCase("name")){
+	    	  name = true;
 	      }
 	   }
 
@@ -248,6 +249,19 @@ class TestSAX2Handler extends DefaultHandler
 	    	  j = Integer.parseInt(new String(ch, start, length));
 	    	  c[i][j] = Double.parseDouble(temp);
 	         bLastName = false;
+	      } else if(name){
+	    	  String temp = new String(ch, start, length);
+	    	  /*for(int i = 0; i < temp.length(); i++){
+	    		  if(temp.charAt(i) <= 47 && temp.charAt(i) >= 58){
+	    			  temp = temp.substring(1);
+	    			  i++;
+	    		  }
+	    	  }*/
+	    	  while(temp.charAt(0) <= 47 || temp.charAt(0) >= 58)
+	    		  temp = temp.substring(1);
+	    	  System.out.println(temp);
+	    	  c = new double[Integer.parseInt(temp)][Integer.parseInt(temp)];
+	    	  name = false;
 	      }
 	   }
 }
