@@ -207,7 +207,7 @@ public class Controleur extends JFrame {
 		
 		Controleur c = new Controleur();
 		try{
-			c.infos = Parseur.parserXML2(new File("fl3795.xml"));
+			c.infos = Parseur.parserXML2(new File("a280.xml"));
 		} catch(Exception e){
 			e.printStackTrace();
 		};
