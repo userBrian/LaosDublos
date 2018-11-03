@@ -26,8 +26,8 @@ public class SolutionPVC extends Solution {
 	 */
 	private ArrayList<Integer> cycleSolution;
 	
-	public SolutionPVC(int taille) {
-		super(taille);
+	public SolutionPVC(int taille, PLPVC pb) {
+		super(taille, pb);
 		matriceSolution = new boolean[taille][taille];
 		for(int i = 0; i < taille; i++){
 			for(int j = 0; j < taille; j++)
@@ -37,9 +37,9 @@ public class SolutionPVC extends Solution {
 	
 	
 	
-	public SolutionPVC(Solution sol)
+	public SolutionPVC(Solution sol, PLPVC pb)
 	{
-		super(sol.getTaille());
+		super(sol.getTaille(), pb);
 		remplirMatriceSolution(sol.getResultat());
 		remplirCycleSolution();
 	}
@@ -60,14 +60,14 @@ public class SolutionPVC extends Solution {
 		remplirCycleSolution();
 	}
 	
-	public void remplirMatriceSolution(int resultat[])
+	public void remplirMatriceSolution(float[] fs)
 	{
 		int tailleMatrice = getTaille();
 		matriceSolution = new boolean[tailleMatrice][tailleMatrice];
 		
-		for (int i = 0; i < resultat.length; i++)
+		for (int i = 0; i < fs.length; i++)
 		{
-			matriceSolution[i%tailleMatrice][i/tailleMatrice] = resultat[i] == 1 ? true : false;
+			matriceSolution[i%tailleMatrice][i/tailleMatrice] = fs[i] == 1 ? true : false;
 		}
 	}
 	

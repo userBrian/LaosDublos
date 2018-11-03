@@ -16,43 +16,46 @@ public class RecuitPVC extends Recuit {
 	public RecuitPVC(PLPVC prob) {
 		super(prob);
 	}
-
-	/* (non-Javadoc)
-	 * @see Recuit#mainLoop()
-	 */
+	
 	@Override
-	protected void mainLoop() {//je crois pas qu'on devrait avoir a redefinir cette fonction
-		int ite = 0;
-		int deltaCout;
+	protected void initialiserTemp(){
 		
-		initialiserTemp();
+		System.out.println("Initialisation temperature ...");
+		setSolutionActuelle(solutionInitiale());
 		
-		while(temperature > 0){	// TODO : D�finir un seuil
-			while(ite < probleme.getDimension()){
-				SolutionPVC x = selectionMouvement((SolutionPVC) getSolutionActuelle());
-				
-				if (accepterSolution(x))
+		boolean ok = false;
+		int nbAcceptations = 0;
+		
+		while(!ok)
+		{
+			for (int i = 0; i < 100; i++) {
+				if (accepterSolution(SolutionPVC.genererSolutionAleatoire(solutionActuelle.getTaille())))
 				{
-					setSolutionActuelle(x);
-					if (getSolutionActuelle().getCout() < getMeilleurCout())
-					{
-						setMeilleurCout(getSolutionActuelle().getCout());
-						setMeilleureSolution(getSolutionActuelle());
-					}
+					nbAcceptations++;
 				}
-				
-				ite++;
 			}
-			
-			temperature *= 0.9;
+			System.out.println(nbAcceptations + " acceptees");
+			if ( nbAcceptations  > 80)
+			{
+				ok = true;
+			}
+			else {
+				System.out.println("Nombre d'acceptations trop faible, température : " + temperature + " -> " + (temperature*2));
+				temperature *= 2;
+			}
 		}
 		
-		probleme.setSolution(getMeilleureSolution());
+		System.out.println("Temperature initialisée à " + temperature);
+		
 	}
+	
+
 
 	
 	@Override
-	protected SolutionPVC selectionMouvement(SolutionPVC solInit){
+	protected SolutionPVC selectionMouvement(Solution solInitiale){
+		
+		SolutionPVC solInit = (SolutionPVC) solInitiale; //on peut essayer de gerer l'exceion ici
 		SolutionPVC voisin;
 		solInit.remplirCycleSolution();
 		do{

@@ -4,7 +4,7 @@ public class PL {
 
 	private boolean maximiser;
 	private int nbVariables;
-	protected double[][] foncObj;
+	protected double[] foncObj;
 	private ArrayList<Equation> contraintes;
 	private Solution solution;
 	protected int dimension;
@@ -29,7 +29,7 @@ public class PL {
 		return maximiser;
 	}
 
-	public double[][] getFoncObj() {
+	public double[] getFoncObj() {
 		return foncObj;
 	}
 
@@ -50,9 +50,8 @@ public class PL {
 		String str = "Bonjour\n";
 		
 		for(int i = 0; i < dimension; i++){
-			for(int j = 0; j < dimension; j++)
-				str += foncObj[i][j] + " ";
-			str += '\n';
+				str += foncObj[i] + " ";
+
 		}
 			
 		

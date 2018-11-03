@@ -1,20 +1,22 @@
 
 public class PLPVC extends PL {
 	
+	
+	protected double[][] matObj;
 	/**
 	 * 
 	 * @param cout
 	 */
 	public PLPVC(double[][] cout){
 		dimension = cout.length;
-		foncObj = new double[dimension][dimension];
-		setFoncObj(cout);
+		matObj = new double[dimension][dimension];
+		setmatObj(cout);
 	}
 	
-	public void setFoncObj(double[][] cout){
+	public void setmatObj(double[][] cout){
 		for(int i = 0; i < dimension; i++){
 			for(int j = 0; j < dimension; j++)
-				foncObj[i][j] = cout[i][j];
+				matObj[i][j] = cout[i][j];
 		}
 	}
 	

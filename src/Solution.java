@@ -1,30 +1,34 @@
 
 public class Solution {
 	
-	private int resultat[];
-	private int cout;
+	private float resultat[];
 	protected int taille; //nb de variables de la solution 
+	protected PL probleme;
 
-	public Solution(int taille) {
+	public Solution(int taille, PL pb) {
 		this.taille = taille;
-		resultat = new int[this.taille*this.taille];
-		//pour un probleme de taille n on a n*n arcs à décider
+		resultat = new float[this.taille];
+		probleme = pb;
 	}
 
-	public int calculeCout(){
+	public double getCout(){
 		// TODO pour ça il faut connaitre le probleme associé 
-		return 0;
-	}
-	
-	public int getCout(){
+		double cout = 0;
+		
+		for (int i = 0; i < resultat.length; i++) {
+			cout += resultat[i]*probleme.getFoncObj()[i];
+		}
+		
 		return cout;
 	}
 	
-	public int[] getResultat(){
+	
+	
+	public float[] getResultat(){
 		return resultat;
 	}
 
-	public void setResultat(int[] resultat) {
+	public void setResultat(float[] resultat) {
 		this.resultat = resultat;
 	}
 
