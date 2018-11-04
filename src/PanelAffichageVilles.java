@@ -9,6 +9,10 @@ class PanelAffichageVilles extends JPanel
 	
 	private int radius = 10;
 	
+	/**
+	 * Permet de récupérer l'ensemble des villes du problème et de les stocker dans 'villes'
+	 * @param pos
+	 */
 	public void getVilles(double[][] pos)
 	{
 		for(double[] ville : pos)
@@ -51,6 +55,9 @@ class PanelAffichageVilles extends JPanel
 		}
 	}
 	
+	/**
+	 * Affiche les villes sur le panel
+	 */
 	public void affichageVilles()
 	{
 		for(int i = 0; i < villes.size(); i++)
@@ -59,6 +66,10 @@ class PanelAffichageVilles extends JPanel
 		}
 	}
 	
+	/**
+	 * Trace une solution donnée
+	 * @param s
+	 */
 	public void tracerSolution(SolutionPVC s)
 	{
 		for(int i = 0; i < s.getCycleSolution().size() - 1; i++)

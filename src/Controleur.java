@@ -72,7 +72,9 @@ public class Controleur extends JFrame {
 	private Color couleurFond = new Color(68, 207, 108);
 	private Color couleurAffichageVilles = new Color(241,255,231);
 	
-	
+	/**
+	 * Initialise la fenêtre de l'application
+	 */
 	public Controleur() {
 		
 		//Définit un titre la fenêtre
@@ -103,11 +105,15 @@ public class Controleur extends JFrame {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * initialise le bouton importer
+	 */
 	public void initialiserBoutonImporter()
 	{
 		boutonImporter.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
+		    	panAffichageVilles.getGraphics().clearRect(0, 0, panAffichageVilles.getWidth(), panAffichageVilles.getHeight());
 		    	JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		    	FileNameExtensionFilter filter = new FileNameExtensionFilter("DATA", "xml", "tsp");
 		    	fc.setFileFilter(filter);
@@ -129,6 +135,9 @@ public class Controleur extends JFrame {
 		});
 	}
 	
+	/**
+	 * initialiser le bouton résoudre
+	 */
 	public void initialiserBoutonResoudre()
 	{
 		boutonResoudre.setEnabled(false);
@@ -165,6 +174,10 @@ public class Controleur extends JFrame {
 		    }
 		});
 	}
+	
+	/**
+	 * initialise le bouton exporter
+	 */
 	public void initialiserBoutonExporter()
 	{
 		boutonExporter.setEnabled(false);
@@ -189,6 +202,10 @@ public class Controleur extends JFrame {
 		    }
 		});
 	}
+	
+	/**
+	 * initialise le radio bouton CPLEX
+	 */
 	public void initialiserRadioBoutonCplex()
 	{
 		radioBoutonCplex.setSelected(true);
@@ -199,6 +216,10 @@ public class Controleur extends JFrame {
 		    }
 		});
 	}
+	
+	/**
+	 * initialise le radio bouton recuit
+	 */
 	public void initialiserRadioBoutonRecuit()
 	{
 		radioBoutonRecuit.addActionListener(new ActionListener() {
@@ -208,6 +229,10 @@ public class Controleur extends JFrame {
 		    }
 		});
 	}
+	
+	/**
+	 * initialise tout le apnel de contrôle qui sonstitue la partie gauche de l'application
+	 */
 	public void initialiserPanelControles()
 	{
 	    panControls.setBackground(couleurFond);

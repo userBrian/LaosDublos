@@ -22,6 +22,10 @@ public class CPLEX {
 	 */
 	private int dim;
 	
+	/**
+	 * Initialisation du modele CPLEX avec un problème linéaire
+	 * @param pb
+	 */
 	public void initialiserModele(PLPVC pb){
 		dim = pb.getNbVilles();
 		double[][] couts = pb.getMatObj();
@@ -37,6 +41,9 @@ public class CPLEX {
 		ajouterContraintes();
 	}
 	
+	/**
+	 * Ajout des contraintes au modele
+	 */
 	public void ajouterContraintes()
 	{
 		try{
@@ -61,6 +68,10 @@ public class CPLEX {
 		};
 	}
 	
+	/**
+	 * Lancement d'une résolution CPLEX
+	 * @return
+	 */
 	public SolutionPVC resoudre(){
 		int sol[][] = new int[dim][dim];
 		try {
@@ -91,6 +102,9 @@ public class CPLEX {
 		return new SolutionPVC(sol);	
 	}
 	
+	/**
+	 * Déclarationd es variables du modele CPLEX
+	 */
 	public void declarerVariables(){
 		try{
 			x = new IloNumVar[dim][];
@@ -128,6 +142,10 @@ public class CPLEX {
 		return resoudre();
 	}
 	
+	/**
+	 * Ajoute une contrainte de sous tours
+	 * @param cycle sous tours dont la contrainte doit être ajoutée
+	 */
 	public void ajoutContrainteSousTours(ArrayList<Integer> cycle)
 	{
 		try {
