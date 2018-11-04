@@ -20,7 +20,6 @@ public class MethIte
 
 	public void ajoutContraintesSousTours(SolutionPVC s){
 		ArrayList<ArrayList<Integer>> sousTours = s.getSousTours();
-		
 		for(int i = 0; i < sousTours.size(); i++)
 			cplex.ajoutContrainteSousTours(sousTours.get(i));
 	}

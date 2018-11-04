@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 public class Controleur extends JFrame {
@@ -70,9 +71,9 @@ public class Controleur extends JFrame {
 	private PanelAffichageVilles panAffichageVilles = new PanelAffichageVilles();
 	
 	//Couleurs Application
-	private Color couleurBoutons = new Color(141, 141, 146);
-	private Color couleurFond = new Color(93, 94, 96);
-	private Color couleurAffichageVilles = new Color(215,214,214);
+	private Color couleurBoutons = new Color(169, 253, 172);
+	private Color couleurFond = new Color(68, 207, 108);
+	private Color couleurAffichageVilles = new Color(241,255,231);
 	
 	
 	public Controleur() {
@@ -100,7 +101,11 @@ public class Controleur extends JFrame {
 	    panAffichageVilles.setBackground(couleurAffichageVilles);
 	    panAffichageVilles.setPreferredSize(new Dimension(800, 600));
 	    pan.add(panAffichageVilles);
+<<<<<<< HEAD
 	    
+=======
+
+>>>>>>> a59f849e6eac66764a5a07979f4df9dfebab082e
 	    //rend la fenêtre visible 
 		this.setVisible(true);
 	}
@@ -112,6 +117,8 @@ public class Controleur extends JFrame {
 		    public void actionPerformed(ActionEvent e) {
 		    	panAffichageVilles.getGraphics().clearRect(0, 0, panAffichageVilles.getWidth(), panAffichageVilles.getHeight());
 		    	JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		    	FileNameExtensionFilter filter = new FileNameExtensionFilter("DATA", "xml", "tsp");
+		    	fc.setFileFilter(filter);
 		    	if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
 		    	{
 		            File file = fc.getSelectedFile();
@@ -121,6 +128,7 @@ public class Controleur extends JFrame {
 			            displayPL.setText("");
 			            displayPL.append("Vous avez importé le fichier " + file.getName() + "\n");
 			            displayPL.append(probleme.toString());
+			            boutonResoudre.setEnabled(true);
 		            } else{
 		            	// TODO : Message d'erreur ("Ce format de fichier n'est pas pris en charge par l'application (formats acceptes : .tsp, .xml")
 		            }
@@ -131,6 +139,7 @@ public class Controleur extends JFrame {
 	
 	public void initialiserBoutonResoudre()
 	{
+		boutonResoudre.setEnabled(false);
 		boutonResoudre.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) 
@@ -150,12 +159,14 @@ public class Controleur extends JFrame {
 						probleme.setSolution(r.solutionInitiale());
 		    		}
 					panAffichageVilles.tracerSolution((SolutionPVC)probleme.getSolution());
+					boutonExporter.setEnabled(true);
 		    	}
 		    }
 		});
 	}
 	public void initialiserBoutonExporter()
 	{
+		boutonExporter.setEnabled(false);
 		boutonExporter.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
