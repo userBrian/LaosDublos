@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -16,46 +17,56 @@ public class RecuitPVC extends Recuit {
 	public RecuitPVC(PLPVC prob) {
 		super(prob);
 	}
-
-	/* (non-Javadoc)
-	 * @see Recuit#mainLoop()
-	 */
+	
 	@Override
-	protected void mainLoop() {
-		int ite = 0;
-		SolutionPVC solActu = solutionInitiale();
-		SolutionPVC meilleureSol = solActu;
-		int deltaCout;
+	protected void initialiserTemp(){
 		
-		initialiserTemp();
+		System.out.println("Initialisation temperature ...");
+		setSolutionActuelle(solutionInitiale());
 		
-		while(temperature > 0){	// TODO : Dï¿½finir un seuil
-			while(ite < probleme.getDimension()){
-				SolutionPVC x = selectionMouvement(solActu);
-				
-				deltaCout = x.getCout() - solActu.getCout();
-				if(deltaCout < 0){
-					solActu = x;
-					if(solActu.getCout() < meilleureSol.getCout())
-						meilleureSol = solActu;
+		boolean ok = false;
+		int nbAcceptations = 0;
+		
+		while(!ok)
+		{
+			for (int i = 0; i < 100; i++) {
+				if (accepterSolution(SolutionPVC.genererSolutionAleatoire(((SolutionPVC) solutionActuelle).getNbVilles())))
+				{
+					nbAcceptations++;
 				}
-				else{
-					if(Math.random() < Math.exp(deltaCout/temperature))
-						solActu = x;
-				}
-				
-				ite++;
 			}
-			
-			temperature *= 0.9;
+			System.out.println(nbAcceptations + " acceptees");
+			if ( nbAcceptations  > 80)
+			{
+				ok = true;
+			}
+			else {
+				System.out.println("Nombre d'acceptations trop faible, temperature : " + temperature + " -> " + (temperature*2));
+				temperature *= 2;
+				nbAcceptations = 0;
+			}
 		}
 		
-		probleme.setSolution(meilleureSol);
+		System.out.println("Temperature initialisee a  " + temperature);
+		
+	}
+	
+	
+	protected boolean accepterSolution(Solution solConsideree)
+	{
+		SolutionPVC sol = (SolutionPVC) solConsideree;
+				
+		deltaCout = sol.getCout(probleme) - ((SolutionPVC) solutionActuelle).getCout(probleme);
+		
+		if(deltaCout < 0) return true;
+		else return (Math.random() < Math.exp(-deltaCout/temperature));
 	}
 
 	
 	@Override
-	protected SolutionPVC selectionMouvement(SolutionPVC solInit){
+	protected SolutionPVC selectionMouvement(Solution solInitiale){
+		
+		SolutionPVC solInit = (SolutionPVC) solInitiale; //on peut essayer de gerer l'exceion ici
 		SolutionPVC voisin;
 		solInit.remplirCycleSolution();
 		do{
@@ -74,29 +85,50 @@ public class RecuitPVC extends Recuit {
 	 */
 	@Override
 	protected SolutionPVC solutionInitiale(){
-		SolutionPVC solInit = new SolutionPVC(probleme.getDimension());
-		double[][] couts = probleme.getFoncObj();
-		double min = Double.MAX_VALUE;
-		int index = 0, nbIte = 0, i = 0;
-		while(nbIte < probleme.getDimension()){
-			System.out.print(i +"->");
-			for(int j = 0; j < probleme.getDimension(); j++){
-				if(couts[i][j] != 0 && couts[i][j] < min){
-					min = couts[i][j];
-					index = j;
-				}
-			}
-			for(int j = 0; j < probleme.getDimension(); j++)
-				couts[j][i] = Double.MAX_VALUE;
-			min = Double.MAX_VALUE;
-			System.out.println(index);
-			solInit.setTrue(nbIte, index);
-			i = index;
-			index = 0;
-			nbIte++;
-			
+//		System.out.println("dimension prob " + probleme.getDimension());
+//		SolutionPVC solInit = new SolutionPVC(((PLPVC) probleme).getNbVilles());
+//		PLPVC pb = (PLPVC) probleme;
+//		double[][] couts = pb.matObj;
+//		double min = Double.MAX_VALUE;
+//		int index = 0, nbIte = 0, i = 0;
+//		while(nbIte < pb.getDimension()){
+//			System.out.print(i +"->");
+//			for(int j = 0; j < pb.nbVilles; j++){
+//				if(couts[i][j] != 0 && couts[i][j] < min){
+//					min = couts[i][j];
+//					index = j;
+//				}
+//			}
+//			for(int j = 0; j < pb.nbVilles; j++)
+//				couts[j][i] = Double.MAX_VALUE;
+//			min = Double.MAX_VALUE;
+//			System.out.println(index);
+//			solInit.setTrue(nbIte, index);
+//			i = index;
+//			index = 0;
+//			nbIte++;
+//			
+//		}
+//		return solInit;
+		
+		PLPVC pb = (PLPVC) probleme;
+		
+		ArrayList<Integer> cycle = new ArrayList<Integer>();
+		for (int i = 0; i < pb.getNbVilles(); i++) {
+			cycle.add(i);
 		}
-		return solInit;
+		cycle.add(cycle.get(0));
+		
+		return new SolutionPVC(cycle);
 	}
 
+	@Override
+	protected void initialiserSolutionActuelle() {
+		
+		solutionActuelle = solutionInitiale();
+		setMeilleurCout(((SolutionPVC) solutionActuelle).getCout(probleme));
+		coutActuel = getMeilleurCout();
+		setMeilleureSolution(solutionActuelle);
+		
+	}
 }

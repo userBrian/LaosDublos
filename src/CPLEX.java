@@ -23,8 +23,8 @@ public class CPLEX {
 	private int dim;
 	
 	public void initialiserModele(PLPVC pb){
-		dim = pb.getDimension();
-		double[][] couts = pb.getFoncObj();
+		dim = pb.getNbVilles();
+		double[][] couts = pb.getMatObj();
 		try {
 			modele = new IloCplex();
 			modele.setParam(IloCplex.IntParam.Threads, 8);
@@ -62,7 +62,7 @@ public class CPLEX {
 	}
 	
 	public SolutionPVC resoudre(){
-		boolean sol[][] = new boolean[dim][dim];
+		int sol[][] = new int[dim][dim];
 		try {
 			
 		// Resolution
@@ -75,11 +75,11 @@ public class CPLEX {
 			{
 				if(i != j && modele.getValue(x[i][j]) == 1)
 				{
-					sol[i][j] = true;
+					sol[i][j] = 1;
 				}
 				else
 				{
-					sol[i][j] = false;
+					sol[i][j] = 0;
 				}
 			}
 		}
@@ -151,5 +151,4 @@ public class CPLEX {
 			e.printStackTrace();
 		}
 	}
-	
 }

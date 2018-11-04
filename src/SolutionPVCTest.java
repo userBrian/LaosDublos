@@ -1,4 +1,4 @@
-/*import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
@@ -8,18 +8,18 @@ class SolutionPVCTest {
 
 	@Test
 	void testRemplirMatriceSolution() {
-		int resultat[] = {0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0};
-		boolean expected[][] = new boolean[5][5];
+		float[] resultat = {0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0};
+		int expected[][] = new int[5][5];
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				expected[i][j] = false;
+				expected[i][j] = 0;
 			}
 		}
-		expected[1][0] = true;
-		expected[0][1] = true;
-		expected[0][2] = true;
-		expected[0][3] = true;
-		expected[0][4] = true;
+		expected[1][0] = 1;
+		expected[0][1] = 1;
+		expected[0][2] = 1;
+		expected[0][3] = 1;
+		expected[0][4] = 1;
 
 		
 		Solution sol = new Solution(5);
@@ -40,52 +40,52 @@ class SolutionPVCTest {
 	@Test
 	void testContrainteSousToursSatisfaite()
 	{
-		boolean matSol[][] = new boolean[5][5];
+		int[][] matSol = new int[5][5];
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				matSol[i][j] = false;
+				matSol[i][j] = 0;
 			}
 		}
-		matSol[0][1] = true;
-		matSol[1][2] = true;
-		matSol[2][0] = true;
-		matSol[3][4] = true;
-		matSol[4][3] = true;
+		matSol[0][1] = 1;
+		matSol[1][2] = 1;
+		matSol[2][0] = 1;
+		matSol[3][4] = 1;
+		matSol[4][3] = 1;
 		
 		
-		boolean matSol2[][] = new boolean[5][5];
+		int matSol2[][] = new int[5][5];
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				matSol2[i][j] = false;
+				matSol2[i][j] = 0;
 			}
 		}
-		matSol2[0][1] = true;
-		matSol2[1][2] = true;
-		matSol2[2][3] = true;
-		matSol2[3][4] = true;
-		matSol2[4][0] = true;
+		matSol2[0][1] = 1;
+		matSol2[1][2] = 1;
+		matSol2[2][3] = 1;
+		matSol2[3][4] = 1;
+		matSol2[4][0] = 1;
 		
 		SolutionPVC solPVC = new SolutionPVC(matSol);
 		SolutionPVC solPVC2 = new SolutionPVC(matSol2);
 		
-		assertEquals(false, solPVC.contrainteSousToursSatisfaite());
-		assertEquals(true, solPVC2.contrainteSousToursSatisfaite());
+		assertEquals(0, solPVC.contrainteSousToursSatisfaite());
+		assertEquals(1, solPVC2.contrainteSousToursSatisfaite());
 		
 	}
 	
 	@Test
 	void testRemplirCycleSolution()
 	{
-		boolean matSol[][] = new boolean[4][4];
+		int matSol[][] = new int[4][4];
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				matSol[i][j] = false;
+				matSol[i][j] = 0;
 			}
 		}
-		matSol[0][1] = true;
-		matSol[1][2] = true;
-		matSol[2][3] = true;
-		matSol[3][0] = true;
+		matSol[0][1] = 1;
+		matSol[1][2] = 1;
+		matSol[2][3] = 1;
+		matSol[3][0] = 1;
 		
 		ArrayList<Integer> expected = new ArrayList<Integer>();
 		expected.add(0);
@@ -101,26 +101,26 @@ class SolutionPVCTest {
 		
 		assertEquals(expected, solPVC.getCycleSolution());
 	}
-	*/
+	
 	
 	/*
 	 * Vu que c'est du random je sais pas trop comment assert
 	 */
-	/*@Test
+	@Test
 	void testGenererInversion2Opt()
 	{
-		boolean matSol[][] = new boolean[6][6];
+		int matSol[][] = new int[6][6];
 		for (int i = 0; i < 6; i++) {
 			for (int j = 0; j < 6; j++) {
-				matSol[i][j] = false;
+				matSol[i][j] = 0;
 			}
 		}
-		matSol[0][1] = true;
-		matSol[1][2] = true;
-		matSol[2][3] = true;
-		matSol[3][4] = true;
-		matSol[4][5] = true;
-		matSol[5][0] = true;
+		matSol[0][1] = 1;
+		matSol[1][2] = 1;
+		matSol[2][3] = 1;
+		matSol[3][4] = 1;
+		matSol[4][5] = 1;
+		matSol[5][0] = 1;
 		
 		SolutionPVC solPVC = new SolutionPVC(matSol);
 
@@ -147,12 +147,12 @@ class SolutionPVCTest {
 		
 		assertEquals(cycle, solPVC.getCycleSolution());
 		
-		boolean expectedMatrice[][] = {
+		int expectedMatrice[][] = {
 				
-				{false, true, false, false},
-				{false, false, true, false},
-				{false, false, false, true},
-				{true, false, false, false}
+				{0, 1, 0, 0},
+				{0, 0, 1, 0},
+				{0, 0, 0, 1},
+				{1, 0, 0, 0}
 				
 		};
 		
@@ -170,4 +170,4 @@ class SolutionPVCTest {
 
 		}
 	}
-}*/
+}

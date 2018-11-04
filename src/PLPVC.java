@@ -1,22 +1,21 @@
 
 public class PLPVC extends PL {
 	
+	protected int nbVilles;
+	protected double[][] matObj;
 	/**
 	 * 
 	 * @param cout
 	 */
 	public PLPVC(double[][] cout){
-		dimension = cout.length;
-		foncObj = new double[dimension][dimension];
-		setFoncObj(cout);
-		//ajouterContraintesPVC();
+		nbVilles = cout.length;
+		dimension = nbVilles*nbVilles;
+		matObj = new double[nbVilles][nbVilles];
+		setmatObj(cout);
 	}
 	
-	public void setFoncObj(double[][] cout){
-		for(int i = 0; i < dimension; i++){
-			for(int j = 0; j < dimension; j++)
-				foncObj[i][j] = cout[i][j];
-		}
+	public void setmatObj(double[][] cout){
+		matObj = cout;
 	}
 	
 	/*
@@ -30,28 +29,28 @@ public class PLPVC extends PL {
 		float coef[] = new float[nbVariable];
 		
 		//un seul arc entrant par ville
-		for (int i = 0; i < getDimension(); i++) {
+		for (int i = 0; i < nbVilles; i++) {
 			
 			for (int j = 0; j < coef.length; j++) {
 				coef[j] = 0;
 			}
 			
-			for (int j = 0; j < getDimension(); j++) {
-				coef[i + j*getDimension()] = 1;
+			for (int j = 0; j < nbVilles; j++) {
+				coef[i + j*nbVilles] = 1;
 			}
 			
 			getContraintes().add(new Equation(nbVariable, coef, signe, scMmb));
 		}
 		
 		//un seul arc sortant par ville
-			for (int i = 0; i < getDimension(); i++) {
+			for (int i = 0; i < nbVilles; i++) {
 				
 				for (int j = 0; j < coef.length; j++) {
 					coef[j] = 0;
 				}
 				
-				for (int j = 0; j < getDimension(); j++) {
-					coef[i*getDimension() + j] = 1;
+				for (int j = 0; j < nbVilles; j++) {
+					coef[i*nbVilles + j] = 1;
 				}
 				
 				getContraintes().add(new Equation(nbVariable, coef, signe, scMmb));
@@ -64,5 +63,15 @@ public class PLPVC extends PL {
 			
 		
 	}
+
+	public int getNbVilles() {
+		return nbVilles;
+	}
+
+	public double[][] getMatObj() {
+		return matObj;
+	}
+	
+	
 	
 }

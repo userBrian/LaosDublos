@@ -151,7 +151,8 @@ public class Controleur extends JFrame {
 		    		else
 		    		{
 		    			RecuitPVC r = new RecuitPVC((PLPVC)probleme);
-						probleme.setSolution(r.solutionInitiale());
+		    			r.mainLoop();
+		    			probleme.setSolution(r.meilleureSolution);
 		    		}
 					panAffichageVilles.tracerSolution((SolutionPVC)probleme.getSolution());
 					boutonExporter.setEnabled(true);
