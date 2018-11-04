@@ -22,8 +22,9 @@ public class PLPVC extends PL {
 	 * A appeler a l'initialisation, ajoute au problème les contraintes spécifiques au PVC
 	 */
 	public void ajouterContraintesPVC()
-	{// TODO : Corriger cette fonction
-		int nbVariable = this.getNbVariables();
+	{
+		int nbVariable = this.getDimension();
+		System.out.println("nombre variable" + nbVariable);
 		char signe = '=';
 		int scMmb = 1;
 		float coef[] = new float[nbVariable];
@@ -55,13 +56,6 @@ public class PLPVC extends PL {
 				
 				getContraintes().add(new Equation(nbVariable, coef, signe, scMmb));
 			}
-		
-		//contrainte de sous tours
-		//pas todo en fait ça se fait plus tard, pendant l'oracle
-			
-		//valeurs des variables, sera defini autrement dans IloCPLEX
-			
-		
 	}
 
 	public int getNbVilles() {

@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
@@ -53,15 +55,10 @@ public class Controleur extends JFrame {
 	//TabbledPanes pour les informations textes Solution/PL
 	JTabbedPane tabbedPane = new JTabbedPane();
 
-	//Panel Solution (Onglet)
+	//Panel Solution
 	private JPanel panSolution = new JPanel();
 	private JTextArea displaySolution = new JTextArea();
 	private JScrollPane scrollSolution = new JScrollPane(displaySolution);
-
-	//Panel ProblèmeLinéaire (Onglet)
-	private JPanel panPL = new JPanel();
-	private JTextArea displayPL = new JTextArea();
-	private JScrollPane scrollPL = new JScrollPane(displayPL);
 
 	//RadioButton CPLEX/Recuit
 	private JRadioButton radioBoutonCplex = new JRadioButton("CPLEX");
@@ -75,7 +72,9 @@ public class Controleur extends JFrame {
 	private Color couleurFond = new Color(68, 207, 108);
 	private Color couleurAffichageVilles = new Color(241,255,231);
 	
-	
+	/**
+	 * Initialise la fenêtre de l'application
+	 */
 	public Controleur() {
 		
 		//Définit un titre la fenêtre
@@ -106,6 +105,9 @@ public class Controleur extends JFrame {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * initialise le bouton importer
+	 */
 	public void initialiserBoutonImporter()
 	{
 		boutonImporter.addActionListener(new ActionListener() {
@@ -121,18 +123,21 @@ public class Controleur extends JFrame {
 		            infos = Parseur.parser(file);
 		            if(infos != null){
 			            probleme = new PLPVC(infos.get(1));
-			            displayPL.setText("");
-			            displayPL.append("Vous avez importé le fichier " + file.getName() + "\n");
-			            displayPL.append(probleme.toString());
 			            boutonResoudre.setEnabled(true);
+			            displaySolution.setText("");
+			            displaySolution.append("Vous avez importé un nouveau fichier : " + file.getName() + "\n");
+			            displaySolution.append("Cliquez sur le bouton Résoudre pour la résolution du problème\n");
+			            displaySolution.append("Si le problème contient beauocup de villes, la résolution risque d'être longue.\n");
 		            } else{
-		            	// TODO : Message d'erreur ("Ce format de fichier n'est pas pris en charge par l'application (formats acceptes : .tsp, .xml")
 		            }
 		    	}
 		    }
 		});
 	}
 	
+	/**
+	 * initialiser le bouton résoudre
+	 */
 	public void initialiserBoutonResoudre()
 	{
 		boutonResoudre.setEnabled(false);
@@ -140,10 +145,16 @@ public class Controleur extends JFrame {
 		    @Override
 		    public void actionPerformed(ActionEvent e) 
 		    {
+		    	System.out.println("bouton Resoudre");
 		    	if(probleme != null)
 		    	{
+		    		System.out.println("problem != null");
+		    		displaySolution.setText("");
+		    		displaySolution.append("Première étape : Affichage des villes...\n");
 		    		panAffichageVilles.getVilles(infos.get(0));
 		    		panAffichageVilles.affichageVilles();
+		    		displaySolution.append("Deuxième étape : Résolution du problème...\n");
+		    		displaySolution.append("Cette étape peut durer longtemps en fonction du nombre de villes.\n");
 		    		if(radioBoutonCplex.isSelected())
 		    		{
 		    			MethIte ite = new MethIte();
@@ -155,12 +166,18 @@ public class Controleur extends JFrame {
 		    			r.mainLoop();
 		    			probleme.setSolution(r.meilleureSolution);
 		    		}
+		    		displaySolution.setText("Voici la solution optimale trouvée : \n");
+		    		displaySolution.append(((SolutionPVC)probleme.getSolution()).toCSV());
 					panAffichageVilles.tracerSolution((SolutionPVC)probleme.getSolution());
 					boutonExporter.setEnabled(true);
 		    	}
 		    }
 		});
 	}
+	
+	/**
+	 * initialise le bouton exporter
+	 */
 	public void initialiserBoutonExporter()
 	{
 		boutonExporter.setEnabled(false);
@@ -185,6 +202,10 @@ public class Controleur extends JFrame {
 		    }
 		});
 	}
+	
+	/**
+	 * initialise le radio bouton CPLEX
+	 */
 	public void initialiserRadioBoutonCplex()
 	{
 		radioBoutonCplex.setSelected(true);
@@ -195,6 +216,10 @@ public class Controleur extends JFrame {
 		    }
 		});
 	}
+	
+	/**
+	 * initialise le radio bouton recuit
+	 */
 	public void initialiserRadioBoutonRecuit()
 	{
 		radioBoutonRecuit.addActionListener(new ActionListener() {
@@ -204,6 +229,10 @@ public class Controleur extends JFrame {
 		    }
 		});
 	}
+	
+	/**
+	 * initialise tout le apnel de contrôle qui sonstitue la partie gauche de l'application
+	 */
 	public void initialiserPanelControles()
 	{
 	    panControls.setBackground(couleurFond);
@@ -238,13 +267,6 @@ public class Controleur extends JFrame {
 		panTerminal.setPreferredSize(new Dimension(400, 400));
 		panTerminal.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
 		panTerminal.setLayout(new GridLayout(1,1,15,15));
-		panPL.setBackground(Color.MAGENTA);
-		panPL.setPreferredSize(new Dimension(400,400));
-		panPL.setLayout(new BorderLayout());
-        displayPL.setEditable(false);
-        displayPL.setBackground(couleurAffichageVilles);
-        scrollPL.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        panPL.add(scrollPL);
         
 		panSolution.setBackground(couleurFond);
 		panSolution.setPreferredSize(new Dimension(400,400));
@@ -253,10 +275,7 @@ public class Controleur extends JFrame {
         displaySolution.setBackground(couleurAffichageVilles);
         scrollSolution.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         panSolution.add(scrollSolution);
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
-		tabbedPane.addTab("Problème Linéaire", panPL);
-		tabbedPane.addTab("Solution", panSolution);
-		panTerminal.add(tabbedPane);
+		panTerminal.add(panSolution);
 		
 		panControls.add(Box.createRigidArea(new Dimension(0,20)));
 		panControls.add(panBoutons);

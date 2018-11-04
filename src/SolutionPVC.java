@@ -261,7 +261,6 @@ public class SolutionPVC extends Solution {
 				matriceSolution[i][j] = 0;
 		}
 		
-		
 		for (int i = 0; i < cycle.size()-1; i++) {
 			setTrue(cycle.get(i), cycle.get(i+1));
 //			System.out.println("i " + i + "size - 2 "+ (cycle.size()-2)+ "set " + cycle.get(i) + "-" + cycle.get(i+1) + " to true");
@@ -301,7 +300,7 @@ public class SolutionPVC extends Solution {
 					}
 				}
 			}
-			while(n != premiereVille);
+			while(n != premiereVille && villesRestantes.contains((Integer)n));
 			sousTours.add(tmp);
 		}
 		return sousTours;
