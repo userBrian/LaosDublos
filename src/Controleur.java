@@ -107,11 +107,15 @@ public class Controleur extends JFrame {
 		    	int returnVal = fc.showOpenDialog(null);
 		    	if (returnVal == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
-		            infos = Parseur.parserXML2(file);
-		            probleme = new PLPVC(infos.get(1));
-		            informationPL = "Opening: " + file.getName() + "\n";
-		            //informationPL += probleme.toString();
-		            System.out.println(informationPL);
+		            infos = Parseur.parser(file);
+		            if(infos != null){
+			            probleme = new PLPVC(infos.get(1));
+			            informationPL = "Opening: " + file.getName() + "\n";
+			            //informationPL += probleme.toString();
+			            System.out.println(informationPL);
+		            } else{
+		            	// TODO : Message d'erreur ("Ce format de fichier n'est pas pris en charge par l'application (formats acceptes : .tsp, .xml")
+		            }
 		        } else {
 		        	System.out.println("Open command cancelled by user.");
 		        }

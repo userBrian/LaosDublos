@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,6 +79,23 @@ public class Parseur {
 				cout[i][j] = Math.sqrt(Math.abs(pos[i][0]-pos[j][0])*Math.abs(pos[i][0]-pos[j][0]) + Math.abs(pos[i][1]-pos[j][1])*Math.abs(pos[i][1]-pos[j][1]));
 		}
 		return cout;
+	}
+	
+	public static List<double[][]> parser(File f){
+		switch(f.getName().split("\\.")[1]){
+		case "tsp":
+			try{
+				return parserTSP(new FileReader(f));
+			} catch(FileNotFoundException e){
+				e.printStackTrace();
+			};
+			break;
+		case "xml":
+			return parserXML2(f);
+		default:
+			System.err.println("Ce format de fichier n'est pas pris en charge par l'application (formats acceptes : .tsp, .xml");
+		}
+		return null;
 	}
 	
 	/**
