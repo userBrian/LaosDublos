@@ -63,7 +63,7 @@ class PanelAffichageVilles extends JPanel
 		{
 			for (int j = 0; j < s.getTaille(); j++) 
 			{
-				if(s.getMatriceSolution()[i][j])
+				if(s.getMatriceSolution()[i][j] == 1)
 				{
 					this.getGraphics().drawLine((int)villes.get(i).x, (int)villes.get(i).y, (int)villes.get(j).x, (int)villes.get(j).y);
 				}

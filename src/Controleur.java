@@ -210,8 +210,11 @@ public class Controleur extends JFrame {
 		List<double[][]> infos = new ArrayList<double[][]>();
 		infos = Parseur.parserXML(new File("a280.xml"));
 		c.probleme = new PLPVC(infos.get(1));
-		CPLEX cplex = new CPLEX();
-		cplex.solveBrian((PLPVC)c.probleme);
+		RecuitPVC recuit = new RecuitPVC((PLPVC)c.probleme);
+		recuit.mainLoop();
+		System.out.println(recuit.meilleureSolution);
+//		CPLEX cplex = new CPLEX();
+//		cplex.solveBrian((PLPVC)c.probleme);
 	}
 
 }

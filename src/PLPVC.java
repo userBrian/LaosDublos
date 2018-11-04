@@ -63,6 +63,10 @@ public class PLPVC extends PL {
 			
 		
 	}
+
+	public int getNbVilles() {
+		return nbVilles;
+	}
 	
 	
 	
