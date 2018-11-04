@@ -18,7 +18,6 @@ public class CPLEX {
 			modele = new IloCplex();
 			modele.setParam(IloCplex.IntParam.Threads, 8);
 		} catch (IloException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		declarerVariables(dim);
@@ -56,7 +55,7 @@ public class CPLEX {
 			
 		// Resolution
 		modele.solve();
-		System.out.println("bite");
+		
 		// Recuperation de la solution
 		for(int i = 0; i < dim; i++)
 		{
@@ -95,7 +94,7 @@ public class CPLEX {
 			IloLinearNumExpr obj = modele.linearNumExpr();
 			for(int i = 0; i < dim; i++){
 				for(int j = 0; j < dim; j++){
-					if(i != j);
+					if(i != j)
 						obj.addTerm(couts[i][j], x[i][j]);
 				}
 			}
