@@ -6,9 +6,20 @@ import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 
 public class CPLEX {
-
+	
+	/**
+	 * modele CPLEX qui définit le problème Linéaire à résoudre
+	 */
 	private IloCplex modele;
+	
+	/**
+	 * Variables du problème Linéaire
+	 */
 	private IloNumVar[][] x;
+	
+	/**
+	 * Dimension du problème linéaire (nombre de variables)
+	 */
 	private int dim;
 	
 	public void initialiserModele(PLPVC pb){
@@ -21,8 +32,8 @@ public class CPLEX {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		declarerVariables(dim);
-		declarerFoncObj(dim, couts);
+		declarerVariables();
+		declarerFoncObj(couts);
 		ajouterContraintes();
 	}
 	
@@ -80,7 +91,7 @@ public class CPLEX {
 		return new SolutionPVC(sol);	
 	}
 	
-	public void declarerVariables(int dim){
+	public void declarerVariables(){
 		try{
 			x = new IloNumVar[dim][];
 			for(int i = 0; i < dim; i++)
@@ -91,7 +102,7 @@ public class CPLEX {
 		};
 	}
 	
-	public void declarerFoncObj(int dim, double[][] couts){
+	public void declarerFoncObj(double[][] couts){
 		try{
 			IloLinearNumExpr obj = modele.linearNumExpr();
 			for(int i = 0; i < dim; i++){
@@ -122,7 +133,6 @@ public class CPLEX {
 		try {
 			
 		int secondMembre = cycle.size() - 1;
-
 		IloLinearNumExpr expr = modele.linearNumExpr();
 		
 			for(int i = 0; i < cycle.size(); i++)

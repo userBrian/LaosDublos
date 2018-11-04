@@ -175,11 +175,12 @@ public class SolutionPVC extends Solution {
 					villeActuelle = i; 
 					break;
 				}
+				System.out.println("hey");
 			}
 			compte++;
 		}
 		while(villeActuelle != 0);
-		
+		System.out.println("hy" + (compte == getTaille()));
 		return compte == getTaille();
 	}
 	
@@ -260,7 +261,6 @@ public class SolutionPVC extends Solution {
 	{
 		ArrayList<ArrayList<Integer>> sousTours = new ArrayList<ArrayList<Integer>>();
 		ArrayList<Integer> villesRestantes = new ArrayList<Integer>();
-		int nbVilles = 0;
 		
 		for(int i = 0; i < taille; i++)
 		{
@@ -280,7 +280,6 @@ public class SolutionPVC extends Solution {
 						tmp.add(n);
 						villesRestantes.remove((Integer)i);
 						n = i;
-						nbVilles++;
 						break;
 					}
 				}
