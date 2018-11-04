@@ -111,6 +111,7 @@ public class Controleur extends JFrame {
 		boutonImporter.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
+		    	panAffichageVilles.getGraphics().clearRect(0, 0, panAffichageVilles.getWidth(), panAffichageVilles.getHeight());
 		    	JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		    	FileNameExtensionFilter filter = new FileNameExtensionFilter("DATA", "xml", "tsp");
 		    	fc.setFileFilter(filter);

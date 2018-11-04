@@ -32,31 +32,28 @@ public class Parseur {
 	 */
 	private static double[][] calculePos(double[][] cout, int dim){
 		double[][] m = new double[dim][dim];
-		System.out.println("Calcul M");
 		for(int i = 0; i < dim; i++){
 			for(int j = 0; j < dim; j++)
 				m[i][j] = ((cout[0][j])*(cout[0][j]) + (cout[i][0])*(cout[i][0]) - (cout[i][j])*(cout[i][j]))/2;
 		}
-		System.out.println("Décomposition");
+		
 		// Decomposition de la matrice
 		EigenvalueDecomposition e = (new Matrix(m)).eig();
-		Matrix U = e.getV();
-		Matrix S = e.getD();
+		Matrix V = e.getV();
+		Matrix D = e.getD();
 
-		int rankrow = S.getRowDimension();
-		int rankcol = S.getColumnDimension();
-		System.out.println("Calcul racine");
+		int rankcol = D.getColumnDimension();
+		
 		// Calcul de la racine des valeurs propres
+		double d;
 		for(int i = 0; i < rankcol; i++){
-			for(int j = 0; j < rankrow; j++){
-				double a = S.get(i, j);
-				a = Math.sqrt(a);
-				S.set(i, j, a);
-			}
+			d = D.get(i, i);
+			D.set(i, i, Math.sqrt(d));
 		}
-		System.out.println("Solution");
+		
 		// Remplissage du tableau des solutions
-		Matrix x = U.times(S);
+		Matrix x = V.times(D);
+		
 		double[][] pos = new double[dim][2];
 		for(int i = 0; i < dim; i++){
 			for(int j = 0; j < 2; j++)
@@ -81,6 +78,11 @@ public class Parseur {
 		return cout;
 	}
 	
+	/**
+	 * Lit l'extension d'un fichier et appelle la fonction de parsage correspondante
+	 * @param f Le fichier a parser
+	 * @return Liste contenant les positions et les distances pour chaque ville
+	 */
 	public static List<double[][]> parser(File f){
 		switch(f.getName().split("\\.")[1]){
 		case "tsp":
@@ -116,7 +118,7 @@ public class Parseur {
 			for(int j = 0; j < 3; j++)
 				br.readLine();
 			
-			// Dimension du problème
+			// Dimension du problï¿½me
 			dim = Integer.parseInt(removeBlanks(br.readLine().split(":")[1]));
 			pos = new double[dim][2];
 			
@@ -188,17 +190,21 @@ public class Parseur {
 				
 	}
 	
+	/**
+	 * Parse un fichier .xml
+	 * @param f Fichier .xml
+	 * @return Liste contenant les positions et les distances pour chaque ville
+	 */
 	public static List<double[][]> parserXML2(File f){
 		List<double[][]> infos = new ArrayList<double[][]>();
 		
 		try {
 	         SAXParserFactory factory = SAXParserFactory.newInstance();
 	         SAXParser saxParser = factory.newSAXParser();
-	         TestSAX2Handler userhandler = new TestSAX2Handler();
+	         XMLHandler userhandler = new XMLHandler();
 	         saxParser.parse(f, userhandler);
-	         System.out.println("CalculePos");
-	         infos.add(calculePos(userhandler.c, userhandler.c.length));
-	         infos.add(userhandler.c);
+	         infos.add(calculePos(userhandler.getCout(), userhandler.getCout().length));
+	         infos.add(userhandler.getCout());
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
@@ -218,64 +224,59 @@ public class Parseur {
 	}
 }
 
-class TestSAX2Handler extends DefaultHandler
-{
-		boolean bFirstName = false;
-	   boolean bLastName = false;
-	   boolean name = false;
-	   boolean bMarks = false;
-	   public double[][] c;
-	   int i = 0, j = 0;
-	   String temp;
+class XMLHandler extends DefaultHandler{
+	
+	private boolean edge = false;
+	private boolean name = false;
+	private double[][] cout;
+	int i = 0, j = 0;
+	String temp;
 
-	   @Override
-	   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-	      
-	      if (qName.equalsIgnoreCase("vertex")) {
-	         bFirstName = true;
-	      } else if (qName.equalsIgnoreCase("edge")) {
-	    	 temp = attributes.getValue("cost");
-	         bLastName = true;
-	      } else if(qName.equalsIgnoreCase("name")){
-	    	  name = true;
-	      }
-	   }
+	/**
+	 * Action a effectuer a la detection d'une balise ouvrante
+	 */
+	@Override
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		if(qName.equalsIgnoreCase("edge")){
+			temp = attributes.getValue("cost");
+			edge = true;
+		}
+		else if(qName.equalsIgnoreCase("name"))
+			name = true;
+	}
 
-	   @Override
-	   public void endElement(String uri, 
-	      String localName, String qName) throws SAXException {
-	      
-	      if (qName.equalsIgnoreCase("vertex")) {
-	    	  i+=1;
-	    	  System.out.println(i);
-	      }
-	   }
+	/**
+	 * Action a effectuer a la detection d'une balise fermante
+	 */
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+		if(qName.equalsIgnoreCase("vertex"))
+			i+=1;
+	}
 
-	   @Override
-	   public void characters(char ch[], int start, int length) throws SAXException {
-
-	      if (bFirstName) {
-	         bFirstName = false;
-	      } else if (bLastName) {
-	    	  j = Integer.parseInt(new String(ch, start, length));
-	    	  if(i != j)
-	    		  c[i][j] = Double.parseDouble(temp);
-	    	  else
-	    		  c[i][j] = 0;
-	         bLastName = false;
-	      } else if(name){
-	    	  String temp = new String(ch, start, length);
-	    	  /*for(int i = 0; i < temp.length(); i++){
-	    		  if(temp.charAt(i) <= 47 && temp.charAt(i) >= 58){
-	    			  temp = temp.substring(1);
-	    			  i++;
-	    		  }
-	    	  }*/
-	    	  while(temp.charAt(0) <= 47 || temp.charAt(0) >= 58)
-	    		  temp = temp.substring(1);
-	    	  System.out.println(temp);
-	    	  c = new double[Integer.parseInt(temp)][Integer.parseInt(temp)];
-	    	  name = false;
-	      }
-	   }
+	/**
+	 * Traite les chaines contenues dans les balises et remplit le tableau des couts
+	 */
+	@Override
+	public void characters(char ch[], int start, int length) throws SAXException {
+		if(edge){
+			j = Integer.parseInt(new String(ch, start, length));
+			if(i != j)
+				cout[i][j] = Double.parseDouble(temp);
+			else
+				cout[i][j] = 0;
+			edge = false;
+		}
+		else if(name){
+			String temp = new String(ch, start, length);
+			while(temp.charAt(0) <= 47 || temp.charAt(0) >= 58)
+				temp = temp.substring(1);
+			cout = new double[Integer.parseInt(temp)][Integer.parseInt(temp)];
+			name = false;
+		}
+	}
+	
+	public double[][] getCout(){
+		return cout;
+	}
 }
