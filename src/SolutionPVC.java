@@ -163,7 +163,6 @@ public class SolutionPVC extends Solution {
 	 */
 	boolean contrainteSousToursSatisfaite()
 	{
-				
 		int villeActuelle = 0;
 		int compte = 0;
 		

@@ -101,8 +101,6 @@ public class Controleur extends JFrame {
 	    panAffichageVilles.setPreferredSize(new Dimension(800, 600));
 	    pan.add(panAffichageVilles);
 	    
-	    initialiserBoutonImporter();
-	    
 	    //rend la fenêtre visible 
 		this.setVisible(true);
 	}
@@ -112,6 +110,7 @@ public class Controleur extends JFrame {
 		boutonImporter.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
+		    	panAffichageVilles.getGraphics().clearRect(0, 0, panAffichageVilles.getWidth(), panAffichageVilles.getHeight());
 		    	JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		    	if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
 		    	{
@@ -267,8 +266,7 @@ public class Controleur extends JFrame {
 	}
 
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) {	
 		Controleur c = new Controleur();
 	}
 

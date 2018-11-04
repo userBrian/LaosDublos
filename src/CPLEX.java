@@ -56,7 +56,7 @@ public class CPLEX {
 			
 		// Resolution
 		modele.solve();
-
+		System.out.println("bite");
 		// Recuperation de la solution
 		for(int i = 0; i < dim; i++)
 		{
@@ -72,7 +72,6 @@ public class CPLEX {
 				}
 			}
 		}
-
 		} catch(IloException e){
 			e.printStackTrace();
 		}
