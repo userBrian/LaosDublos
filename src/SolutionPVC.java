@@ -190,7 +190,7 @@ public class SolutionPVC extends Solution {
 	 * 
 	 * retourne vrai si la solution est valide, faux sionon
 	 */
-	boolean solutionValide()
+	public boolean solutionValide()
 	{
 		return valeursVariablesValides() && contrainte1satisfaite() && contrainteSousToursSatisfaite();
 	}
@@ -199,10 +199,16 @@ public class SolutionPVC extends Solution {
 		matriceSolution[x][y] = 1;
 	}
 
+	/*
+	 * Renvoie cycleSolution
+	 */
 	public ArrayList<Integer> getCycleSolution() {
 		return cycleSolution;
 	}
 	
+	/*
+	 * Renvoie une liste d'id representant une inversion 2-opt de la solution
+	 */
 	public ArrayList<Integer> genererInversion2Opt()
 	{
 		ArrayList<Integer> inversion = new ArrayList<Integer>();
@@ -228,6 +234,9 @@ public class SolutionPVC extends Solution {
 		return inversion;
 	}
 	
+	/*
+	 * fixe la valeur de Resultat
+	 */
 	public void setResultat(int[][] matriceSolution2)
 	{
 		for (int j = 0; j < matriceSolution2.length; j++) {
@@ -238,6 +247,9 @@ public class SolutionPVC extends Solution {
 		}
 	}
 	
+	/*
+	 * Remplis tous les attributs correctement a partir d'une liste d'id representant le cycle solution
+	 */
 	public void setAll(ArrayList<Integer> cycle)
 	{
 		cycleSolution = cycle;
@@ -258,6 +270,10 @@ public class SolutionPVC extends Solution {
 		setResultat(matriceSolution);
 	}
 
+	
+	/*
+	 * Renvoie une liste de tous les sous-tours presents dans la soluiotn
+	 */
 	public ArrayList<ArrayList<Integer>> getSousTours() 
 	{
 		ArrayList<ArrayList<Integer>> sousTours = new ArrayList<ArrayList<Integer>>();
@@ -291,6 +307,10 @@ public class SolutionPVC extends Solution {
 		return sousTours;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see Solution#toCSV()
+	 */
 	public String toCSV() {
 		String str = "Ordre Villes ; Id Ville \n";
 		for(int i = 0; i < cycleSolution.size(); i++)
@@ -300,6 +320,9 @@ public class SolutionPVC extends Solution {
 		return str;
 	}
 	
+	/*
+	 * Renvoie une solution aleatoire qui valide les contraintes du PVC
+	 */
 	public static SolutionPVC genererSolutionAleatoire(int nbVilles)
 	{
 		ArrayList<Integer> cycle = new ArrayList<Integer>();
@@ -313,6 +336,11 @@ public class SolutionPVC extends Solution {
 		return new SolutionPVC(cycle);
 	}
 
+	
+	/*
+	 * (non-Javadoc)
+	 * @see Solution#getCout(PL)
+	 */
 	@Override
 	public double getCout(PL prob)
 	{

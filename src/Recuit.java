@@ -20,10 +20,20 @@ public abstract class Recuit {
 		temperature = 1000;
 	}
 	
+	/**
+	 * Fixe la valeur initiale de la temperature
+	 */
 	protected abstract void initialiserTemp();
 	
+	
+	/*
+	 * Fixe la solution de depart et le cout associé
+	 */
 	protected abstract void initialiserSolutionActuelle();
 	
+	/*
+	 * Renvoie true si la solution est acceptee
+	 */
 	protected boolean accepterSolution(Solution solConsideree)
 	{
 				
@@ -33,6 +43,9 @@ public abstract class Recuit {
 		else return (Math.random() < Math.exp(-deltaCout/temperature));
 	}
 	
+	/**
+	 * Fonction principale du recuit, contient l'algorithme
+	 */
 	protected void mainLoop()
 	{
 		nbIte = 1000;
@@ -82,8 +95,14 @@ public abstract class Recuit {
 		probleme.setSolution(getMeilleureSolution());
 	}
 	
+	/*
+	 * Retourne une solution voisine de la solution actuelle 
+	 */
 	protected abstract Solution selectionMouvement(Solution solInit);
 	
+	/*
+	 * Decide d'une soltuion initaile pour debuter l'algorithme
+	 */
 	protected abstract Solution solutionInitiale();
 
 	
