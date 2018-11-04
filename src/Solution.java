@@ -5,6 +5,10 @@ public class Solution {
 	private int cout;
 	protected int taille; //nb de variables de la solution 
 
+	public Solution(){
+		
+	}
+	
 	public Solution(int taille) {
 		this.taille = taille;
 		resultat = new int[this.taille*this.taille];

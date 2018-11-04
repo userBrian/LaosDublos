@@ -107,12 +107,11 @@ public class Controleur extends JFrame {
 		    	int returnVal = fc.showOpenDialog(null);
 		    	if (returnVal == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
-		            //infos = Parseur.parserXML(file);
-		            infos = Parseur.parserXML(new File("a280.xml"));
+		            infos = Parseur.parserXML2(file);
 		            probleme = new PLPVC(infos.get(1));
 		            informationPL = "Opening: " + file.getName() + "\n";
-		            informationPL += probleme.toString();
-		            
+		            //informationPL += probleme.toString();
+		            System.out.println(informationPL);
 		        } else {
 		        	System.out.println("Open command cancelled by user.");
 		        }
@@ -125,8 +124,19 @@ public class Controleur extends JFrame {
 		boutonResoudre.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
+		    	SolutionPVC s = new SolutionPVC();
 		    	
-				RecuitPVC r = new RecuitPVC((PLPVC)probleme);
+		    	if(radioBoutonCplex.isSelected()){
+		    		MethIte ite = new MethIte();
+		    		s = ite.resolutionProbleme((PLPVC)probleme);
+		    		s.printCycleSolution();
+		    		System.out.println(s.contrainteSousToursSatisfaite());
+		    		
+		    	}
+		    	else if(radioBoutonRecuit.isSelected()){
+		    		
+		    	}
+				/*RecuitPVC r = new RecuitPVC((PLPVC)probleme);
 				System.out.println("Go !");
 				SolutionPVC sol = r.solutionInitiale();
 				for(int i = 0; i < 280; i++){
@@ -135,10 +145,10 @@ public class Controleur extends JFrame {
 					System.out.println("\n");
 				}
 				
-				System.out.println(infos.get(0)[1][0]);
+				System.out.println(infos.get(0)[1][0]);*/
 				panAffichageVilles.getVilles(infos.get(0));
 				panAffichageVilles.affichageVilles();
-				panAffichageVilles.tracerSolution(sol);
+				panAffichageVilles.tracerSolution(s);
 		    }
 		});
 	}
@@ -206,14 +216,14 @@ public class Controleur extends JFrame {
 	public static void main(String[] args) {
 		
 		Controleur c = new Controleur();
-		try{
+		/*try{
 			c.infos = Parseur.parserXML2(new File("u1060.xml"));
 		} catch(Exception e){
 			e.printStackTrace();
 		};
 		c.probleme = new PLPVC(c.infos.get(1));
 		c.panAffichageVilles.getVilles(c.infos.get(0));
-		c.panAffichageVilles.affichageVilles();
+		c.panAffichageVilles.affichageVilles();*/
 
 		/*MethIte ite = new MethIte();
 		SolutionPVC s = ite.resolutionProbleme((PLPVC)c.probleme);
