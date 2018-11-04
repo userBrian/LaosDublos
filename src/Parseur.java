@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,6 +81,23 @@ public class Parseur {
 		return cout;
 	}
 	
+	public static List<double[][]> parser(File f){
+		switch(f.getName().split("\\.")[1]){
+		case "tsp":
+			try{
+				return parserTSP(new FileReader(f));
+			} catch(FileNotFoundException e){
+				e.printStackTrace();
+			};
+			break;
+		case "xml":
+			return parserXML2(f);
+		default:
+			System.err.println("Ce format de fichier n'est pas pris en charge par l'application (formats acceptes : .tsp, .xml");
+		}
+		return null;
+	}
+	
 	/**
 	 * Parse un fichier .tsp
 	 * @param f Fichier .tsp
@@ -120,11 +138,6 @@ public class Parseur {
 		} catch(IOException e){
 			e.printStackTrace();
 		};
-		
-		for(int k = 0; k< dim; k++){
-			for(int j = 0; j < 2; j++)
-				System.out.println(pos[k][j]);
-		}
 		
 		// Calcul des distances
 		cout = new double[dim][dim];
@@ -177,8 +190,6 @@ public class Parseur {
 	
 	public static List<double[][]> parserXML2(File f){
 		List<double[][]> infos = new ArrayList<double[][]>();
-		String dim = "";
-		int i = 0;
 		
 		try {
 	         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -247,7 +258,10 @@ class TestSAX2Handler extends DefaultHandler
 	         bFirstName = false;
 	      } else if (bLastName) {
 	    	  j = Integer.parseInt(new String(ch, start, length));
-	    	  c[i][j] = Double.parseDouble(temp);
+	    	  if(i != j)
+	    		  c[i][j] = Double.parseDouble(temp);
+	    	  else
+	    		  c[i][j] = 0;
 	         bLastName = false;
 	      } else if(name){
 	    	  String temp = new String(ch, start, length);

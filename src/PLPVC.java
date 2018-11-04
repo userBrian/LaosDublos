@@ -9,6 +9,7 @@ public class PLPVC extends PL {
 		dimension = cout.length;
 		foncObj = new double[dimension][dimension];
 		setFoncObj(cout);
+		//ajouterContraintesPVC();
 	}
 	
 	public void setFoncObj(double[][] cout){
@@ -22,7 +23,7 @@ public class PLPVC extends PL {
 	 * A appeler a l'initialisation, ajoute au problème les contraintes spécifiques au PVC
 	 */
 	public void ajouterContraintesPVC()
-	{
+	{// TODO : Corriger cette fonction
 		int nbVariable = this.getNbVariables();
 		char signe = '=';
 		int scMmb = 1;

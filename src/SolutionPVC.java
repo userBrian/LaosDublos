@@ -26,6 +26,10 @@ public class SolutionPVC extends Solution {
 	 */
 	private ArrayList<Integer> cycleSolution;
 	
+	public SolutionPVC(){
+		
+	}
+	
 	public SolutionPVC(int taille) {
 		super(taille);
 		matriceSolution = new boolean[taille][taille];
