@@ -11,16 +11,16 @@ public class CPLEX {
 	private IloNumVar[][] x;
 	private int dim;
 	
-	public CPLEX()
-	{
-		
-	}
-	
-	
 	public void initialiserModele(PLPVC pb){
-		int dim = pb.getDimension();
+		dim = pb.getDimension();
 		double[][] couts = pb.getFoncObj();
-		
+		try {
+			modele = new IloCplex();
+			modele.setParam(IloCplex.IntParam.Threads, 8);
+		} catch (IloException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		declarerVariables(dim);
 		declarerFoncObj(dim, couts);
 		ajouterContraintes();
@@ -112,50 +112,8 @@ public class CPLEX {
 	 * @return La solution du probleme
 	 */
 	public SolutionPVC solvePVC(PLPVC pb){
-		dim = pb.getDimension();
-		double[][] couts = pb.getFoncObj();
 		
-		try{
-			modele = new IloCplex();
-			modele.setParam(IloCplex.IntParam.Threads, 8);
-			
-			// Variables
-			x = new IloNumVar[dim][];
-			for(int i = 0; i < dim; i++)
-				x[i] = modele.boolVarArray(dim);
-			IloNumVar[] u = modele.numVarArray(dim, 0, Double.MAX_VALUE);
-			
-			// Objectif
-			IloLinearNumExpr obj = modele.linearNumExpr();
-			for(int i = 0; i < dim; i++){
-				for(int j = 0; j < dim; j++){
-					if(i != j)
-						obj.addTerm(couts[i][j], x[i][j]);
-				}
-			}
-			modele.addMinimize(obj);
-			
-			// Contraintes
-			for(int j = 0; j < dim; j++){
-				IloLinearNumExpr expr = modele.linearNumExpr();
-				for(int i = 0; i < dim; i++){
-					if(i != j)
-						expr.addTerm(1.0, x[i][j]);
-				}
-				modele.addEq(expr, 1.0);
-			}
-			for(int i = 0; i < dim; i++){
-				IloLinearNumExpr expr = modele.linearNumExpr();
-				for(int j = 0; j < dim; j++){
-					if(i != j)
-						expr.addTerm(1.0, x[i][j]);
-				}
-				modele.addEq(expr, 1.0);
-			}
-
-		} catch(IloException e){
-			e.printStackTrace();
-		}
+		initialiserModele(pb);
 		return resoudre();
 	}
 	

@@ -6,7 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,13 +56,11 @@ public class Controleur extends JFrame {
 	private JPanel panSolution = new JPanel();
 	private JTextArea displaySolution = new JTextArea();
 	private JScrollPane scrollSolution = new JScrollPane(displaySolution);
-	private String informationSolution;
 
 	//Panel ProblèmeLinéaire (Onglet)
 	private JPanel panPL = new JPanel();
 	private JTextArea displayPL = new JTextArea();
 	private JScrollPane scrollPL = new JScrollPane(displayPL);
-	private String informationPL;
 
 	//RadioButton CPLEX/Recuit
 	private JRadioButton radioBoutonCplex = new JRadioButton("CPLEX");
@@ -65,6 +68,12 @@ public class Controleur extends JFrame {
 
 	//Panel affichage villes 
 	private PanelAffichageVilles panAffichageVilles = new PanelAffichageVilles();
+	
+	//Couleurs Application
+	private Color couleurBoutons = new Color(141, 141, 146);
+	private Color couleurFond = new Color(93, 94, 96);
+	private Color couleurAffichageVilles = new Color(215,214,214);
+	
 	
 	public Controleur() {
 		
@@ -88,7 +97,7 @@ public class Controleur extends JFrame {
 	    initialiserPanelControles();
 	    
 	    //Panel affichage villes
-	    //panAffichageVilles.setBackground(Color.BLUE);
+	    panAffichageVilles.setBackground(couleurAffichageVilles);
 	    panAffichageVilles.setPreferredSize(new Dimension(800, 600));
 	    pan.add(panAffichageVilles);
 	    
@@ -104,14 +113,14 @@ public class Controleur extends JFrame {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		    	JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-		    	int returnVal = fc.showOpenDialog(null);
-		    	if (returnVal == JFileChooser.APPROVE_OPTION) {
+		    	if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
 		            //infos = Parseur.parserXML(file);
-		            infos = Parseur.parserXML(new File("a280.xml"));
+		            infos = Parseur.parserXML2(new File("att48.xml"));
 		            probleme = new PLPVC(infos.get(1));
-		            informationPL = "Opening: " + file.getName() + "\n";
-		            informationPL += probleme.toString();
+		            displayPL.setText("");
+		            displayPL.append("Opening: " + file.getName() + "\n");
+		            displayPL.append(probleme.toString());
 		            
 		        } else {
 		        	System.out.println("Open command cancelled by user.");
@@ -124,51 +133,104 @@ public class Controleur extends JFrame {
 	{
 		boutonResoudre.addActionListener(new ActionListener() {
 		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		    	
-				RecuitPVC r = new RecuitPVC((PLPVC)probleme);
-				System.out.println("Go !");
-				SolutionPVC sol = r.solutionInitiale();
-				for(int i = 0; i < 280; i++){
-					for(int j = 0; j < 280; j++)
-						System.out.println(sol.getMatriceSolution()[i][j]);
-					System.out.println("\n");
-				}
-				
-				System.out.println(infos.get(0)[1][0]);
-				panAffichageVilles.getVilles(infos.get(0));
-				panAffichageVilles.affichageVilles();
-				panAffichageVilles.tracerSolution(sol);
+		    public void actionPerformed(ActionEvent e) 
+		    {
+		    	if(probleme != null)
+		    	{
+		    		panAffichageVilles.getVilles(infos.get(0));
+		    		panAffichageVilles.affichageVilles();
+		    		if(radioBoutonCplex.isSelected())
+		    		{
+		    			MethIte ite = new MethIte();
+		    			probleme.setSolution(ite.resolutionProbleme((PLPVC)probleme));
+		    		}
+		    		else
+		    		{
+		    			RecuitPVC r = new RecuitPVC((PLPVC)probleme);
+						probleme.setSolution(r.solutionInitiale());
+		    		}
+					panAffichageVilles.tracerSolution((SolutionPVC)probleme.getSolution());
+		    		
+		    	}
 		    }
 		});
 	}
-	
+	public void initialiserBoutonExporter()
+	{
+		boutonExporter.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				
+				int userSelection = chooser.showSaveDialog(null);
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+			        try {
+			        	
+			            PrintWriter pw = new PrintWriter(chooser.getSelectedFile()+".csv");
+			    		pw.write(probleme.getSolution().toCSV());
+			    		pw.flush();
+			    		pw.close();
+			            
+			        } catch (Exception ex) {
+			            ex.printStackTrace();
+			        }
+			    }
+				/*File f = chooser.getCurrentDirectory();
+				String filename = f.getAbsolutePath();
+				System.out.println(filename);*/
+		    }
+		});
+	}
+	public void initialiserRadioBoutonCplex()
+	{
+		radioBoutonCplex.setSelected(true);
+		radioBoutonCplex.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	radioBoutonRecuit.setSelected(!radioBoutonCplex.isSelected());
+		    }
+		});
+	}
+	public void initialiserRadioBoutonRecuit()
+	{
+		radioBoutonRecuit.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	radioBoutonCplex.setSelected(!radioBoutonRecuit.isSelected());
+		    }
+		});
+	}
 	public void initialiserPanelControles()
 	{
-	    panControls.setBackground(Color.ORANGE);
+	    panControls.setBackground(couleurFond);
 	    panControls.setPreferredSize(new Dimension(400, 600));
 	    panControls.setLayout(new BoxLayout(panControls, BoxLayout.Y_AXIS));
 	    
 		JPanel panBoutons = new JPanel();
-		panBoutons.setBackground(Color.GREEN);
+		panBoutons.setBackground(couleurFond);
 		panBoutons.setPreferredSize(new Dimension(400, 50));
 		panBoutons.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
 		panBoutons.setLayout(new GridLayout(1,3,15,15));
 		
+		boutonImporter.setBackground(couleurBoutons);
+		boutonResoudre.setBackground(couleurBoutons);
+		boutonExporter.setBackground(couleurBoutons);
 		panBoutons.add(boutonImporter);
 		panBoutons.add(boutonResoudre);
 		panBoutons.add(boutonExporter);
 		
 		JPanel panRadioBoutons = new JPanel();
-		panRadioBoutons.setBackground(Color.PINK);
+		panRadioBoutons.setBackground(couleurFond);
 		panRadioBoutons.setPreferredSize(new Dimension(400, 50));
-		panRadioBoutons.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+		panRadioBoutons.setBorder(BorderFactory.createEmptyBorder(10, 70, 10, 70));
 		panRadioBoutons.setLayout(new GridLayout(1,2,15,15));
+		radioBoutonCplex.setBackground(couleurFond);
+		radioBoutonRecuit.setBackground(couleurFond);
 		panRadioBoutons.add(radioBoutonCplex);
 		panRadioBoutons.add(radioBoutonRecuit);
 		
 		JPanel panTerminal = new JPanel();
-		panTerminal.setBackground(Color.GRAY);
+		panTerminal.setBackground(couleurFond);
 		panTerminal.setPreferredSize(new Dimension(400, 400));
 		panTerminal.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
 		panTerminal.setLayout(new GridLayout(1,1,15,15));
@@ -176,13 +238,15 @@ public class Controleur extends JFrame {
 		panPL.setPreferredSize(new Dimension(400,400));
 		panPL.setLayout(new BorderLayout());
         displayPL.setEditable(false);
+        displayPL.setBackground(couleurAffichageVilles);
         scrollPL.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         panPL.add(scrollPL);
         
-		panSolution.setBackground(Color.YELLOW);
+		panSolution.setBackground(couleurFond);
 		panSolution.setPreferredSize(new Dimension(400,400));
 		panSolution.setLayout(new BorderLayout());
         displaySolution.setEditable(false);
+        displaySolution.setBackground(couleurAffichageVilles);
         scrollSolution.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         panSolution.add(scrollSolution);
 		tabbedPane.setTabPlacement(JTabbedPane.TOP);
@@ -200,13 +264,16 @@ public class Controleur extends JFrame {
 	    
 	    initialiserBoutonImporter();
 	    initialiserBoutonResoudre();
+	    initialiserBoutonExporter();
+	    initialiserRadioBoutonCplex();
+	    initialiserRadioBoutonRecuit();
 	}
+
 	
-		
 	public static void main(String[] args) {
 		
 		Controleur c = new Controleur();
-		try{
+		/*try{
 			c.infos = Parseur.parserXML2(new File("a280.xml"));
 		} catch(Exception e){
 			e.printStackTrace();
@@ -220,7 +287,7 @@ public class Controleur extends JFrame {
 		SolutionPVC s = ite.resolutionProbleme((PLPVC)c.probleme);
 		System.out.println("hey");
 		s.printCycleSolution();
-		c.panAffichageVilles.tracerSolution(s);
+		c.panAffichageVilles.tracerSolution(s);*/
 		
 		/*double[][] coor = {{10, 5}, {5, 10}, {15, 10}, {7, 20}, {13, 20}};
 		double[][] cout = {{0, 1, 2, 3, 4, 2, 3, 1, 2}, {1, 0, 3, 6, 2, 8, 7, 2, 4}, {2, 3, 0, 7, 8, 7, 6, 3, 6}, {3, 6, 7, 0, 1, 5, 8, 4, 8}, {4, 2, 8, 1, 0, 1, 5, 5, 1}, {2, 8, 7, 5, 1, 0, 2, 6, 3}, {3, 7, 6, 8, 5, 2, 0, 7, 5}, {1, 2, 3, 4, 5, 6, 7, 0, 7}, {2, 4, 6, 8, 1, 3, 5, 7, 0}};

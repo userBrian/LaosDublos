@@ -31,6 +31,10 @@ public class Solution {
 	public int getTaille() {
 		return taille;
 	}
+
+	public String toCSV() {
+		return resultat.toString();
+	}
 	
 	
 	

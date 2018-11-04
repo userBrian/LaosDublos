@@ -287,4 +287,13 @@ public class SolutionPVC extends Solution {
 		return sousTours;
 	}
 	
+	public String toCSV() {
+		String str = "Ordre Villes ; Id Ville \n";
+		for(int i = 0; i < cycleSolution.size(); i++)
+		{
+			str += i + " ; " + cycleSolution.get(i) + "\n";
+		}
+		return str;
+	}
+	
 }

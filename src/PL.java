@@ -56,10 +56,10 @@ public class PL {
 			str += '\n';
 		}*/
 		str += "\nContraintes : \n";
-		for(int i = 0; i < contraintes.size(); i++)
+		/*for(int i = 0; i < contraintes.size(); i++)
 		{
 			str += "\t"+contraintes.get(i).toString();
-		}
+		}*/
 		return str;
 	}
 
